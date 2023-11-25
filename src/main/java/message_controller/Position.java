@@ -1,7 +1,5 @@
 package message_controller;
 
-import org.jetbrains.annotations.Nullable;
-
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -9,7 +7,7 @@ public class Position {
     private final double lat;
     private final double lon;
     private final double alt;
-    private final @Nullable OffsetDateTime dateTime;
+    private final OffsetDateTime dateTime;
 
     public Position() {
         this.lat = -1;
@@ -37,7 +35,7 @@ public class Position {
         return alt;
     }
 
-    public @Nullable OffsetDateTime getDateTime() {
+    public OffsetDateTime getDateTime() {
         return dateTime;
     }
 }

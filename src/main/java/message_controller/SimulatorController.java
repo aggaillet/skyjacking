@@ -12,6 +12,12 @@ import java.net.URL;
 public class SimulatorController implements IMessageController {
     private final String APILINK = "";
 
+    /**
+     * Requests position data from the API-Simulator.
+     *
+     * @return The position retrieved from the API-Simulator.
+     * @throws RuntimeException if an error occurs during API communication.
+     */
     @Override
     public Position requestPosition() {
         try {
@@ -19,7 +25,7 @@ public class SimulatorController implements IMessageController {
             HttpURLConnection connection = (HttpURLConnection) apiURL.openConnection();
 
             if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                throw new IOException("Failed to get data : " + connection.getResponseCode());
+                throw new IOException("Failed to get data: " + connection.getResponseCode());
             }
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
@@ -41,11 +47,17 @@ public class SimulatorController implements IMessageController {
 
             return new Position(longitude, latitude, altitude, time);
         } catch (IOException | JSONException exception) {
-            exception.printStackTrace();
-            return new Position();
+            throw new RuntimeException("API handling error occurred", exception);
         }
     }
 
+    /**
+     * Sends a spoofed message via HTTP request to the API-Simulator, changing its position.
+     *
+     * @param byteMessage The message to be sent as a byte array.
+     * @return True if the message was sent successfully; otherwise, false.
+     * @throws RuntimeException if an error occurs during API communication.
+     */
     @Override
     public boolean sendSpoofedMsg(byte[] byteMessage) {
         try {
@@ -68,9 +80,9 @@ public class SimulatorController implements IMessageController {
             connection.disconnect();
 
             return responseCode == HttpURLConnection.HTTP_OK;
-        } catch (Exception exception) {
-            exception.printStackTrace();
-            return false;
+        } catch (IOException exception) {
+            throw new RuntimeException(exception);
         }
     }
 }
+
