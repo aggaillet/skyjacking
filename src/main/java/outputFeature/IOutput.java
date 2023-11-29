@@ -1,7 +1,10 @@
 package outputFeature;
 
+import java.io.BufferedWriter;
+
 public interface IOutput {
 
-    void write();
+
+    void write(OutputData data, String dataInString);
 
 }
