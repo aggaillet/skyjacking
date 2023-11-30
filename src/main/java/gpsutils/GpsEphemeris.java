@@ -5,10 +5,8 @@ package gpsutils;
  * @author Angelo G. Gaillet
  */
 public class GpsEphemeris {
-    public int prn;
     public int week;
-    public double svAccuracyM;
-    public int ura; // TODO remove either this or svAccuracy
+    public int ura;
     public int svHealth;
     public int iode;
     public int iodc;
