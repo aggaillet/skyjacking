@@ -1,6 +1,8 @@
 package message_controller;
 
+import gpsutils.GpsPosition;
+
 public interface IMessageController {
-    Position requestPosition();
+    GpsPosition requestPosition();
     boolean sendSpoofedMsg(byte[] byteMessage);
 }

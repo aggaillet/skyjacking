@@ -1,5 +1,6 @@
 package message_controller;
 
+import gpsutils.GpsPosition;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.BufferedReader;
@@ -19,7 +20,7 @@ public class SimulatorController implements IMessageController {
      * @throws RuntimeException if an error occurs during API communication.
      */
     @Override
-    public Position requestPosition() {
+    public GpsPosition requestPosition() {
         try {
             URL apiURL = new URL(APILINK);
             HttpURLConnection connection = (HttpURLConnection) apiURL.openConnection();
@@ -45,7 +46,7 @@ public class SimulatorController implements IMessageController {
             reader.close();
             connection.disconnect();
 
-            return new Position(longitude, latitude, altitude, time);
+            return new GpsPosition(longitude, latitude, altitude, time);
         } catch (IOException | JSONException exception) {
             throw new RuntimeException("API handling error occurred", exception);
         }

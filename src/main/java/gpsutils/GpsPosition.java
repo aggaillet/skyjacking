@@ -1,22 +1,22 @@
-package message_controller;
+package gpsutils;
 
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class Position {
+public class GpsPosition {
     private final double lat;
     private final double lon;
     private final double alt;
     private final OffsetDateTime dateTime;
 
-    public Position() {
-        this.lat = -1;
-        this.lon = -1;
-        this.alt = -1;
+    public GpsPosition() {
+        this.lat = 0;
+        this.lon = 0;
+        this.alt = 0;
         this.dateTime = null;
     }
 
-    public Position(double lat, double lon, double alt, String dateTimeString) {
+    public GpsPosition(double lat, double lon, double alt, String dateTimeString) {
         this.lat = lat;
         this.lon = lon;
         this.alt = alt;
