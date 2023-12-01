@@ -3,6 +3,9 @@ package message_controller;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Position Class regroup the GPS Data Position of the UAV, plus its time
+ */
 public class Position {
     private final double lat;
     private final double lon;
