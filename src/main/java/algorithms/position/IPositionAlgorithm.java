@@ -8,7 +8,7 @@ import gpsutils.GpsPosition;
  * as real) given the current real position of the victim and the desired final target position of the vicitim after the attack's
  * conclusion.
  */
-interface IPositionAlgorithm {
+public interface IPositionAlgorithm {
     /**
      * Computes and returns the desired spoofed position.
      * @param currentPosition real current position of the victim.
