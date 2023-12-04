@@ -2,15 +2,14 @@
   "AlgorithmType": "which one to use",
   "Directory": "where",
   "destination":{
-      "altitude": -1,
-      "longitude": -1,
-      "latitude": -1
-},
+    "altitude": -1,
+    "longitude": -1,
+    "latitude": -1
+  },
   "dataLog": {
     "refreshRate": -1,
     "allMsg": false,
     "baseTrajectory": false,
-    "currentTrajectory": false,
-    "false":false
+    "currentTrajectory": false
   }
 }

@@ -1,4 +1,4 @@
-package gpsutils;
+package configuration;
 
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
@@ -9,7 +9,7 @@ public class Position {
     private final double alt;
     private final OffsetDateTime dateTime;
 
-    public Position() {
+    public Position(double latitude, double longitude, double altitude) {
         this.lat = -1;
         this.lon = -1;
         this.alt = -1;
