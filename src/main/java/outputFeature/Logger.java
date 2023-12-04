@@ -2,10 +2,7 @@ package outputFeature;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-
 
 /**
  * This class manage the wrinting of wanted data into a log files.
@@ -15,9 +12,8 @@ import java.util.HashMap;
  */
 public class Logger implements IOutput, AutoCloseable{
 
-    private final HashMap<OutputData, BufferedWriter> writtersMap = new HashMap<>(); //map of buffers, key is the data type, value is the file writter
+    private final HashMap<OutputData, BufferedWriter> writtersMap = new HashMap<>(); //map of buffers, key is the data type to be logged, value is the file writter
 
-    private ArrayList<OutputData> dataToLog;   //list of data to be logged
 
     /**
      * Constructor of Logger,
@@ -26,27 +22,28 @@ public class Logger implements IOutput, AutoCloseable{
      */
     public Logger(String pathToLogDirectory, OutputData[] dataToLog){
 
-        //for each Data user want to log, create its own file in the specified directory
-        for(OutputData data: dataToLog){
+        //fill all wanted output data in the map (Will allow to sort and avoid to log unwanted data), as well as their respective filewritters
+        if (dataToLog.length > 0) {
 
-            try {
+            //for each Data the user want to log, create its own file in the specified directory
+            for(int i = 0; i < dataToLog.length; i++){
 
-                //creating files and buffer writers for each type of output data
-                FileWriter currentFileWriter = new FileWriter(pathToLogDirectory+"/"+data.toString().toLowerCase(), false);
-                this.writtersMap.put(data, new BufferedWriter(currentFileWriter));  //add them to the map of buffers
+                String fullPath = pathToLogDirectory + "/" + dataToLog[i].toString().toLowerCase() + ".txt";
+                try {
 
-            }catch(IOException e){
+                    //creating files and buffer writers for each type of output data
+                    FileWriter currentFileWriter = new FileWriter(fullPath, false);
+                    this.writtersMap.put(dataToLog[i], new BufferedWriter(currentFileWriter));  //add them to the map of buffers
 
-                System.err.println("Logger - IOException: Error creating [" + data + "] log file OR path given is not incorrect! \n");
-                return;
+                }catch(IOException e){
+
+                    System.err.println("Logger - IOException: Error creating [" + dataToLog[i] + "] log file OR path given is not incorrect! \n");
+                    continue;
+                }
             }
-        }
 
-        //fill all wanted output data in the array (Will allow to sort and avoid to log unwanted data)
-        if (this.dataToLog != null) {
-            this.dataToLog.addAll(Arrays.asList(dataToLog));
         }else{
-            System.out.println("Logger - INFO: No data to log (check config file, \"dataToLog\" section).\n");
+            System.err.println("Logger - INFO: No data to log (check config file, \"dataToLog\" section).\n");
         }
     }
 
@@ -60,13 +57,14 @@ public class Logger implements IOutput, AutoCloseable{
     public void write(OutputData data, String dataInStringForm) {
 
         //ensure data in param is part of data type specified in config file (avoid log unwanted data)
-        if(!this.dataToLog.contains(data)){
+        if(!this.writtersMap.containsKey(data)){
             System.out.println("Logger - INFO: Tried to log unwanted data (not part of specified data in config file), ignoring it... \n");
             return;
         }
 
         //we write the data in the appropriate file
         try {
+
             //add time for each log message?
             this.writtersMap.get(data).write(data.toString()+": ");
             this.writtersMap.get(data).write(dataInStringForm);
@@ -85,22 +83,16 @@ public class Logger implements IOutput, AutoCloseable{
      * Close properly all the streams (for all log files created)
      */
     public void terminateLogger(){
-
         this.writtersMap.forEach(
             (typeOfOutputData, respectiveBuffer) -> {
-
                 try {
                     respectiveBuffer.close();
-
                 } catch (IOException e) {
-
                     throw new RuntimeException(e);
                 }
-
             }
     );
 }
-
 
     /**
      * ----- NOT WORKING /!\ -----

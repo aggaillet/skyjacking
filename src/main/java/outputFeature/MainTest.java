@@ -4,21 +4,29 @@ import java.util.ArrayList;
 
 public class MainTest {
 
-    private static String pathToLogDirectory = "./log";
+    private static final String pathToLogDirectory = "./log";
 
     public static void main(String[] args) {
-        OutputData[] chosenFromConfig = new OutputData[10]; // change 10 to the max nbr of possible output data (ensure in config reader that no duplicates can be input into the table)
+        OutputData[] chosenFromConfig = new OutputData[2];  //ensure no duplicate in config reader/extractor
         chosenFromConfig[0] = OutputData.CURRENT_POSITION;
         chosenFromConfig[1] = OutputData.SPOOFED_TRAJ;
 
-        Logger testLog = new Logger(pathToLogDirectory, chosenFromConfig);
+//        Logger testLog = new Logger(pathToLogDirectory, chosenFromConfig);
+//
+//        testLog.write(OutputData.INITIAL_TRAJ, "traj initiale, PAS VALIDE CAR PAS DANS LA CONFIG");
+//
+//        testLog.write(OutputData.CURRENT_POSITION, "DRONE IS HERE");
+//        testLog.write(OutputData.CURRENT_POSITION, "NOW IT IS HERE");
+//        testLog.write(OutputData.SPOOFED_TRAJ, "NEW TRAJ");
+//
+//        testLog.terminateLogger();    //close streams
 
-        testLog.write(OutputData.INITIAL_TRAJ, "traj initiale, PAS VALIDE CAR PAS DANS LA CONFIG");
 
-        testLog.write(OutputData.CURRENT_POSITION, "DRONE IS HERE");
-        testLog.write(OutputData.CURRENT_POSITION, "NOW IT IS HERE");
-        testLog.write(OutputData.SPOOFED_TRAJ, "NEW TRAJ");
+        CommandLineInput cli = new CommandLineInput(chosenFromConfig);
+        cli.write(OutputData.INITIAL_TRAJ, "traj initiale, PAS VALIDE CAR PAS DANS LA CONFIG");
 
-        testLog.terminateLogger();    //close streams
+        cli.write(OutputData.CURRENT_POSITION, "DRONE IS HERE");
+        cli.write(OutputData.CURRENT_POSITION, "NOW IT IS HERE");
+        cli.write(OutputData.SPOOFED_TRAJ, "NEW TRAJ");
     }
 }
