@@ -14,6 +14,7 @@ public class Scheduler {
         this.resolution_ns = resolution_ns;
         this.messageController = messageController;
     }
+
     public void scheduleSend(byte[] message, OffsetDateTime time){
         Runnable run = new Runnable() {
             public void run() {
@@ -31,6 +32,5 @@ public class Scheduler {
             }
         };
         new Thread(run).start();
-
     }
 }

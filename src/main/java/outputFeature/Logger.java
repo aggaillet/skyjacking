@@ -3,6 +3,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * This class manage the wrinting of wanted data into a log files.
@@ -20,25 +21,19 @@ public class Logger implements IOutput, AutoCloseable{
      * @param pathToLogDirectory specified in config file, directory where will be created log files
      * @param dataToLog specified in config file, which data will be logged (init traj, spoofed trad, current position...)
      */
-    public Logger(String pathToLogDirectory, OutputData[] dataToLog){
+    public Logger(String pathToLogDirectory, List<OutputData> dataToLog){
 
         //fill all wanted output data in the map (Will allow to sort and avoid to log unwanted data), as well as their respective filewritters
-        if (dataToLog.length > 0) {
-
+        if (dataToLog.size() > 0) {
             //for each Data the user want to log, create its own file in the specified directory
-            for(int i = 0; i < dataToLog.length; i++){
-
-                String fullPath = pathToLogDirectory + "/" + dataToLog[i].toString().toLowerCase() + ".txt";
+            for (OutputData outputData : dataToLog) {
+                String fullPath = pathToLogDirectory + "/" + outputData.toString().toLowerCase() + ".txt";
                 try {
-
                     //creating files and buffer writers for each type of output data
                     FileWriter currentFileWriter = new FileWriter(fullPath, false);
-                    this.writtersMap.put(dataToLog[i], new BufferedWriter(currentFileWriter));  //add them to the map of buffers
-
-                }catch(IOException e){
-
-                    System.err.println("Logger - IOException: Error creating [" + dataToLog[i] + "] log file OR path given is not incorrect! \n");
-                    continue;
+                    this.writtersMap.put(outputData, new BufferedWriter(currentFileWriter));  //add them to the map of buffers
+                } catch (IOException e) {
+                    System.err.println("Logger - IOException: Error creating [" + outputData + "] log file OR path given is not incorrect! \n");
                 }
             }
 

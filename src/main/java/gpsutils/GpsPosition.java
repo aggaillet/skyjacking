@@ -48,4 +48,8 @@ public class GpsPosition {
     public OffsetDateTime getDateTime() {
         return dateTime;
     }
+
+    public String toString(){
+        return "lat: " + lat + " lon: " + lon + " alt: " + alt + " timestamp: " + dateTime.toString() + "\n";
+    }
 }

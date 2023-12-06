@@ -1,24 +1,20 @@
 package outputFeature;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /* */
-public class CommandLineInput implements IOutput{
+public class CommandLineOutput implements IOutput{
 
-    private ArrayList<OutputData> dataToPrint = new ArrayList<>();   //list of data to be printed in console
+    private final ArrayList<OutputData> dataToPrint = new ArrayList<>();   //list of data to be printed in console
 
-    public CommandLineInput(OutputData[] dataToPrint){
-
-        if (dataToPrint.length > 0) {
-
-            this.dataToPrint.addAll(Arrays.asList(dataToPrint));
-
+    public CommandLineOutput(List<OutputData> dataToPrint){
+        if (dataToPrint.size() > 0) {
+            this.dataToPrint.addAll(dataToPrint);
         }else{
             System.err.println("Logger - INFO: No data to log (check config file, \"dataToLog\" section).\n");
         }
-
     }
 
     /**
@@ -29,7 +25,6 @@ public class CommandLineInput implements IOutput{
      */
     @Override
     public void write(OutputData data, String dataInStringForm) {       //replace string with data represented as an object directly? for json
-
         //ensure data in param is part of data type specified in config file
         if(!this.dataToPrint.contains(data)){
             System.out.println("Logger - INFO: Tried to print unwanted data (not part of specified data in config file), ignoring it... \n");

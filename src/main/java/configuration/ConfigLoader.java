@@ -1,43 +1,52 @@
 package configuration;
 
+import algorithms.message.EMessageAlgorithm;
+import algorithms.position.EPositionAlgorithm;
 import gpsutils.GpsPosition;
 import org.json.JSONObject;
+import outputFeature.OutputData;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ConfigLoader {
-    private String directory; // where to find the file
-    private String algoType; // the type of algo the user wishes to apply the spoofing with
-    private GpsPosition destination; // the final destination wanted by the user
-    private double latitude; // the latitude of the desired position
-    private double altitude; // the altitude of the desired position
-    private double longitude; // the longitude of the desired position
-    private JSONObject dataLog; //the stuff the user wants to see
-    private boolean baseTrajectory; // the initial real trajectory, to see if the user wants to have it
-    private boolean currentTrajectory; //the current trajectory of the uav, it is also up to user preference to see it or not
-    private int refreshRate; //it is a frequency of renewal of messages
+    private final String directory; // where to find the file
+    private final EMessageAlgorithm msgAlgoType; // the type of algo the user wishes to apply the spoofing with
+    private final EPositionAlgorithm posAlgoType; // the type of algo the user wishes to apply the spoofing with
+    private final GpsPosition destination; // the final destination wanted by the user
+    private final double latitude; // the latitude of the desired position
+    private final double altitude; // the altitude of the desired position
+    private final double longitude; // the longitude of the desired position
+    private final boolean initialTrajectory; // the initial real trajectory, to see if the user wants to have it
+    private final boolean spoofedTrajectory; //the current trajectory of the uav, it is also up to user preference to see it or not
+    private final boolean resultingTrajectory; //the current trajectory of the uav, it is also up to user preference to see it or not
+    private final int refreshRate; //it is a frequency of renewal of messages
 
     public ConfigLoader() {
         StringBuilder configText = readConfiguration();
         String config = configText.toString();
         JSONObject mainJsonObject = new JSONObject(config);
         this.directory = mainJsonObject.getString("Directory");
-        this.algoType = mainJsonObject.getString("AlgorithmType");
+        this.msgAlgoType = EMessageAlgorithm.valueOf(mainJsonObject.getString("MessageAlgorithmType"));
+        this.posAlgoType = EPositionAlgorithm.valueOf(mainJsonObject.getString("PositionAlgorithmType"));
         JSONObject wantedDestination = mainJsonObject.getJSONObject("destination");
         this.latitude = wantedDestination.getDouble("latitude");
         this.altitude = wantedDestination.getDouble("altitude");
         this.longitude = wantedDestination.getDouble("longitude");
         this.destination = new GpsPosition(this.latitude,this.longitude, this.altitude);
-        this.dataLog = mainJsonObject.getJSONObject("dataLog");
-        this.baseTrajectory = dataLog.getBoolean("baseTrajectory");
-        this.currentTrajectory =  dataLog.getBoolean("currentTrajectory");
+        //the stuff the user wants to see
+        JSONObject dataLog = mainJsonObject.getJSONObject("dataLog");
+        this.initialTrajectory = dataLog.getBoolean("initialTrajectory");
+        this.spoofedTrajectory =  dataLog.getBoolean("spoofedTrajectory");
+        this.resultingTrajectory =  dataLog.getBoolean("currentPosition");
         this.refreshRate = dataLog.getInt("refreshRate");
     }
 
-    public StringBuilder readConfiguration(){
+    private StringBuilder readConfiguration(){
         StringBuilder configText= new StringBuilder();
         String line ="";
         try {
@@ -56,24 +65,29 @@ public class ConfigLoader {
     return configText;
     }
 
-    public String getAlgoType() {
-        return algoType;
+    public EMessageAlgorithm getMsgAlgoType() {
+        return msgAlgoType;
+    }
+    public EPositionAlgorithm getPosAlgoType() {
+        return posAlgoType;
     }
 
     public String getDirectory() {
         return directory;
     }
 
-    public JSONObject getDataLog() {
-        return dataLog;
-    }
-
-    public boolean isBaseTrajectory() {
-        return baseTrajectory;
-    }
-
-    public boolean isCurrentTrajectory() {
-        return currentTrajectory;
+    public List<OutputData> getSelectedOutputs(){
+        ArrayList<OutputData> outputData = new ArrayList<>();
+        if (this.initialTrajectory) {
+            outputData.add(OutputData.INITIAL_TRAJ);
+        }
+        if (this.spoofedTrajectory) {
+            outputData.add(OutputData.SPOOFED_TRAJ);
+        }
+        if (this.resultingTrajectory) {
+            outputData.add(OutputData.RESULT_TRAJ);
+        }
+        return outputData;
     }
 
     public int getRefreshRate() {
@@ -95,12 +109,4 @@ public class ConfigLoader {
     public GpsPosition getDestination() {
         return destination;
     }
-//    public static void main(String[] arg){
-//        ConfigLoader c = new ConfigLoader();
-//        System.out.println(c.getAlgoType());
-//        System.out.println(c.getLatitude());
-//        System.out.println(c.getDestination());
-//        System.out.println(c.getDataLog());
-//
-//    }
 }

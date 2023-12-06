@@ -1,5 +1,6 @@
 {
-  "AlgorithmType": "which one to use",
+  "MessageAlgorithmType": "which one to use",
+  "PositionAlgorithmType": "which one to use",
   "Directory": "where",
   "destination":{
     "altitude": -1,
@@ -8,8 +9,8 @@
   },
   "dataLog": {
     "refreshRate": -1,
-    "allMsg": false,
-    "baseTrajectory": false,
-    "currentTrajectory": false
+    "initialTrajectory": false,
+    "spoofedTrajectory": false,
+    "resultingTrajectory": false
   }
 }
