@@ -11,7 +11,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class SimulatorController implements IMessageController {
-    private final String APILINK = "";
+    private final String API_LINK = "";
 
     /**
      * Requests position data from the API-Simulator.
@@ -22,13 +22,16 @@ public class SimulatorController implements IMessageController {
     @Override
     public GpsPosition requestPosition() {
         try {
-            URL apiURL = new URL(APILINK);
+            //The URL make the link between the order requested and the answer
+            URL apiURL = new URL(API_LINK);
             HttpURLConnection connection = (HttpURLConnection) apiURL.openConnection();
 
             if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
                 throw new IOException("Failed to get data: " + connection.getResponseCode());
             }
 
+            //Get the data answer, on a brut format.
+            //Translate the data as a String format, then as a JSON readable format
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             StringBuilder jsonResponse = new StringBuilder();
             String line;
@@ -43,6 +46,7 @@ public class SimulatorController implements IMessageController {
             double altitude = locationObject.getDouble("altitude");
             String time = jsonObject.getString("time");
 
+            //Close the buffer reader and the connection to the API
             reader.close();
             connection.disconnect();
 
@@ -62,13 +66,15 @@ public class SimulatorController implements IMessageController {
     @Override
     public boolean sendSpoofedMsg(byte[] byteMessage) {
         try {
-            URL apiURL = new URL(APILINK);
+            //The URL make the link between the API and the system
+            URL apiURL = new URL(API_LINK);
             HttpURLConnection connection = (HttpURLConnection) apiURL.openConnection();
 
             if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
                 throw new IOException("Failed to get data : " + connection.getResponseCode());
             }
 
+            //Prepare the connection to send a message as a POST
             connection.setRequestMethod("POST");
             connection.setDoOutput(true);
 
