@@ -3,7 +3,6 @@ package gpsutils;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class GpsPosition {
 /**
  * Position Class regroup the GPS Data Position of the UAV, plus its time
  */
