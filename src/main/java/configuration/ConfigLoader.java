@@ -1,5 +1,6 @@
 package configuration;
 
+import gpsutils.GpsPosition;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -10,7 +11,7 @@ import java.io.IOException;
 public class ConfigLoader {
     private String directory; // where to find the file
     private String algoType; // the type of algo the user wishes to apply the spoofing with
-    private  Position destination; // the final destination wanted by the user
+    private GpsPosition destination; // the final destination wanted by the user
     private double latitude; // the latitude of the desired position
     private double altitude; // the altitude of the desired position
     private double longitude; // the longitude of the desired position
@@ -29,7 +30,7 @@ public class ConfigLoader {
         this.latitude = wantedDestination.getDouble("latitude");
         this.altitude = wantedDestination.getDouble("altitude");
         this.longitude = wantedDestination.getDouble("longitude");
-        this.destination = new Position(this.latitude,this.longitude, this.altitude);
+        this.destination = new GpsPosition(this.latitude,this.longitude, this.altitude);
         this.dataLog = mainJsonObject.getJSONObject("dataLog");
         this.baseTrajectory = dataLog.getBoolean("baseTrajectory");
         this.currentTrajectory =  dataLog.getBoolean("currentTrajectory");
@@ -91,7 +92,7 @@ public class ConfigLoader {
         return longitude;
     }
 
-    public Position getDestination() {
+    public GpsPosition getDestination() {
         return destination;
     }
 //    public static void main(String[] arg){
