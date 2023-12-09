@@ -24,7 +24,7 @@ public class ConfigLoader {
     private final boolean initialTrajectory; // the initial real trajectory, to see if the user wants to have it
     private final boolean spoofedTrajectory; //the current trajectory of the uav, it is also up to user preference to see it or not
     private final boolean resultingTrajectory; //the current trajectory of the uav, it is also up to user preference to see it or not
-    private final int refreshRate; //it is a frequency of renewal of messages
+    private final int refreshRate; //it is a frequency of renewal of messages in nanoseconds
 
     public ConfigLoader() {
         StringBuilder configText = readConfiguration();
@@ -42,7 +42,7 @@ public class ConfigLoader {
         JSONObject dataLog = mainJsonObject.getJSONObject("dataLog");
         this.initialTrajectory = dataLog.getBoolean("initialTrajectory");
         this.spoofedTrajectory =  dataLog.getBoolean("spoofedTrajectory");
-        this.resultingTrajectory =  dataLog.getBoolean("currentPosition");
+        this.resultingTrajectory =  dataLog.getBoolean("resultingTrajectory");
         this.refreshRate = dataLog.getInt("refreshRate");
     }
 
