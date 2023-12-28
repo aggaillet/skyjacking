@@ -12,9 +12,13 @@ import outputFeature.CommandLineOutput;
 import outputFeature.IOutput;
 import outputFeature.Logger;
 import outputFeature.OutputData;
+import java.time.OffsetDateTime;
+import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
-import java.util.ArrayList;
-import java.util.List;
+import static gpsutils.GpsTimeUtil.getTowOfNow;
 
 /**
  * @author Angelo G. Gaillet
@@ -34,9 +38,8 @@ public class Main {
                 outputs = new ArrayList<>();
                 outputs.add(new CommandLineOutput(configLoader.getSelectedOutputs()));
                 outputs.add(new Logger(configLoader.getDirectory(), configLoader.getSelectedOutputs()));
-                while(true){
-                        run();
-                }
+                ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+                executor.scheduleAtFixedRate(Main::run, 0, configLoader.getRefreshRate(), TimeUnit.NANOSECONDS);
         }
 
         private static void run(){
@@ -48,7 +51,21 @@ public class Main {
         }
 
         private static void createAndScheduleNavMsgs(SatelliteMessageInfo satMsgInfo){
-                //TODO: implement
+                int delay = 2000; //TODO: implement (nanoseconds)
+                double delayS = delay / 1000.;
+                if (4 * delay < configLoader.getRefreshRate()){
+                        throw new RuntimeException("Refresh rate is too fast. Minimum supported: " + 4 * delay + " ns");
+                } else if (delayS < satMsgInfo.getDeltaT()) {
+                        throw new RuntimeException("Unable to send messages in the past. Please increase transmission delay");
+                }
+                byte [] msg1 = encoder.createFirstSubframe(satMsgInfo.getEphemeris(), (int) (getTowOfNow() + delayS - satMsgInfo.getDeltaT()));
+                byte [] msg2 = encoder.createSecondSubframe(satMsgInfo.getEphemeris(), (int) (getTowOfNow() + 2 * delayS - satMsgInfo.getDeltaT()));
+                byte [] msg3 = encoder.createThirdSubframe(satMsgInfo.getEphemeris(), (int) (getTowOfNow() + 3 * delayS - satMsgInfo.getDeltaT()));
+                byte [] msg4 = encoder.createFourthSubframe(satMsgInfo.getSupportData(), (int) (getTowOfNow() + 4 * delayS - satMsgInfo.getDeltaT()));
+                scheduler.scheduleSend(msg1, OffsetDateTime.now().plusNanos(delay));
+                scheduler.scheduleSend(msg2, OffsetDateTime.now().plusNanos(2 * delay));
+                scheduler.scheduleSend(msg3, OffsetDateTime.now().plusNanos(3 * delay));
+                scheduler.scheduleSend(msg4, OffsetDateTime.now().plusNanos(4 * delay));
         }
 
         private static void log(GpsPosition currentPosition, GpsPosition spoofedPosition){

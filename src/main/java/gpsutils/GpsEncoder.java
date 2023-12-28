@@ -124,7 +124,7 @@ public final class GpsEncoder {
         toBits(TGD_INDEX, TGD_LENGTH, (int) (ephemeris.tgd / POW_2_NEG_31), result);
         toBits(TOC_INDEX, TOC_LENGTH, (int) (ephemeris.toc / POW_2_4), result);
         toBits(AF2_INDEX, AF2_LENGTH, (int) (ephemeris.af2 / POW_2_NEG_55), result);
-        toBits(AF1_INDEX, AF1_LENGTH, (int) (ephemeris.af2 / POW_2_NEG_43), result);
+        toBits(AF1_INDEX, AF1_LENGTH, (int) (ephemeris.af1 / POW_2_NEG_43), result);
         toBits(AF0_INDEX, AF0_LENGTH, (int) (ephemeris.af0 / POW_2_NEG_31), result);
         return result;
     }

@@ -7,7 +7,6 @@ import java.util.*;
  * @author Angelo G. Gaillet
  */
 public class CoordinateConverter {
-    private static final double GMST_0 = 6.697374558 + 0.06570982441908 * (System.currentTimeMillis() - new Date(2000 - 1900, Calendar.JANUARY, 1).getTime()) / 3600000.0;
 
     /**
      * Converts a {@link GpsPosition} (latitude, longitude, altitude) into Earth-Centered, Earth-Fixed cartesian
@@ -62,7 +61,7 @@ public class CoordinateConverter {
         if (xyz.size() != 3) {
             throw new RuntimeException("Invalid ECF coordinates. Size of list must be 3");
         }
-        double gmst = calculateGMST();
+        double gmst = GpsTimeUtil.calculateGMST();
         double xECI, yECI, zECI;
         double xECEF = xyz.get(0);
         double yECEF = xyz.get(1);
@@ -107,24 +106,6 @@ public class CoordinateConverter {
         }
         double omega = 0; // Not well-defined for stationary satellites. Any constant is valid. Set to zero for simplicity.
         return new ArrayList<>(Arrays.asList(r, i, Omega_lon, omega));
-    }
-
-    /**
-     * Calculates the current Greenwich Mean Sidereal Time
-     * @return the current GMST
-     */
-    private static double calculateGMST() {
-        // Get the current time in UTC
-        long currentTimeMillis = System.currentTimeMillis();
-        Date utcTime = new Date(currentTimeMillis);
-
-        // Calculate GMST
-        double gmst = GMST_0 + (1.00273790925 / 15) * (utcTime.getHours() * 3600 + utcTime.getMinutes() * 60 + utcTime.getSeconds());
-
-        // Ensure GMST is within the range [0, 24) hours
-        gmst %= 24.0;
-
-        return gmst;
     }
 
 }

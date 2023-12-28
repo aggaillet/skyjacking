@@ -7,19 +7,15 @@ package gpsutils;
 public class SatelliteMessageInfo {
     private static final int NUM_NAV_MSGS = 4;
     private final int prn;
-    private int[] tows;
+    private double deltaT; // in seconds
     private final GpsEphemeris ephemeris;
     private final GpsSupportData supportData;
 
-    public SatelliteMessageInfo(int prn){
-        this(prn, new GpsEphemeris(), new GpsSupportData(), new int[NUM_NAV_MSGS]);
-    }
-
-    public SatelliteMessageInfo(int prn, GpsEphemeris ephemeris, GpsSupportData supportData, int[] tows){
+    public SatelliteMessageInfo(int prn, GpsEphemeris ephemeris, GpsSupportData supportData, int deltaT){
         this.prn = prn;
         this.ephemeris = ephemeris;
         this.supportData = supportData;
-        this.tows = tows;
+        this.deltaT = deltaT;
     }
 
     public GpsEphemeris getEphemeris() {
@@ -30,12 +26,16 @@ public class SatelliteMessageInfo {
         return supportData;
     }
 
-    public int[] getTow() {
-        return tows;
+    /**
+     * Returns the spoofed transmission time in seconds.
+     * @return an int value representing the signal propagation time from satellite to receiver in seconds.
+     */
+    public double getDeltaT() {
+        return deltaT;
     }
 
-    public void setTow(int[] tows){
-        this.tows = tows;
+    public void setDeltaT(double deltaT){
+        this.deltaT = deltaT;
     }
 
     public int getPrn() {

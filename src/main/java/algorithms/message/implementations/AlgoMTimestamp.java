@@ -11,7 +11,9 @@ import java.util.List;
 /**
  * @author Angelo G. Gaillet
  */
-public class AlgoMTimestamp implements IMessageAlgorithm { //TODO: IMPLEMENT
+public class AlgoMTimestamp implements IMessageAlgorithm {
+    private GpsEphemeris referenceEphem;
+    private GpsSupportData referenceSupportData;
 
     /**
      * Computes the content of the messages necessary to make the target believe it is in the given spoofed position.
@@ -33,6 +35,7 @@ public class AlgoMTimestamp implements IMessageAlgorithm { //TODO: IMPLEMENT
      */
     @Override
     public void setReferenceData(GpsEphemeris referenceEphemeris, GpsSupportData referenceSupportData) {
-
+        this.referenceEphem = referenceEphemeris;
+        this.referenceSupportData = referenceSupportData;
     }
 }
