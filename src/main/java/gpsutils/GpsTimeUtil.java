@@ -51,5 +51,8 @@ public class GpsTimeUtil {
         return (gpsTimeSeconds % SECONDS_IN_GPS_WEEK); // TODO: verify not 1.5 seconds
     }
 
+    public static double getTowDelayed(double delay){
+        return (getTowOfNow() + delay) % SECONDS_IN_GPS_WEEK;
+    }
 
 }

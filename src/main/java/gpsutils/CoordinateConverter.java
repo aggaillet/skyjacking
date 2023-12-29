@@ -1,5 +1,6 @@
 package gpsutils;
 
+import java.security.InvalidParameterException;
 import java.util.*;
 
 /**
@@ -57,7 +58,7 @@ public class CoordinateConverter {
      * @param xyz the ECEF position to convert.
      * @return List[x, y, z] in ECI reference frame.
      */
-    public static List<Double> ecf2eci(List<Double> xyz){
+    public static List<Double> ecef2eci(List<Double> xyz){
         if (xyz.size() != 3) {
             throw new RuntimeException("Invalid ECF coordinates. Size of list must be 3");
         }
@@ -74,13 +75,12 @@ public class CoordinateConverter {
 
     /**
      * Calculates the Keplerian Orbital Elements associated to the given ECI coordinates.<br>
-     * <b>This simplified function assumes a stationary satellite (Vx, Vy, Vz) = 0.</b>
+     * <b>This simplified function assumes a stationary satellite (Vx, Vy, Vz) = 0 on a circular (e = 0) orbit.</b>
      * Where the orbital elements are:
      * <ul>
      *     <li>Radial distance (magnitude of the position vector)</li>
      *     <li>Inclination (angle between the orbital plane and the ECI z-axis)</li>
      *     <li>Longitude of the Ascending Node (angle between the ECI x-axis and the descending node in the orbital plane</li>
-     *     <li>Argument of latitude (angle between the position vector and the ascending node in the orbital plane)</li>
      * </ul>
      * And the ECI reference frame has:
      * <ul>
@@ -90,9 +90,9 @@ public class CoordinateConverter {
      *     <li>The z-axis pointing towards the North Pole</li>
      * </ul>
      * @param xyz the ECI position to convert
-     * @return the KOE in the following order: radial distance, inclination, longitude of the ascending node, argument of latitude
+     * @return the KOE in the following order: radial distance, inclination, longitude of the ascending node (Right ascention)
      */
-    public static List<Double> eci2KOEsimplified(List<Double> xyz){
+    public static List<Double> eci2koe(List<Double> xyz){
         double xECI = xyz.get(0);
         double yECI = xyz.get(1);
         double zECI = xyz.get(2);
@@ -104,8 +104,59 @@ public class CoordinateConverter {
         } else {
             throw new RuntimeException("Impossible to calculate KOE for a stationary satellite with radial distance 0");
         }
-        double omega = 0; // Not well-defined for stationary satellites. Any constant is valid. Set to zero for simplicity.
-        return new ArrayList<>(Arrays.asList(r, i, Omega_lon, omega));
+        return new ArrayList<>(Arrays.asList(r, i, Omega_lon));
     }
 
+    /**
+     * Calculates the ECEF coordinates corresponding to the given Keplerian Orbital Elements.
+     * <b>This simplified function assumes a stationary satellite (Vx, Vy, Vz) = 0 on a circular (e = 0) orbit.</b>
+     * Where the ECEF reference frame has:
+     * <ul>
+     *     <li>The origin at the center of the Earth</li>
+     *     <li>The x-axis pointing towards the intersection of the Equator and Prime Meridian</li>
+     *     <li>The y-axis pointing towards the intersection of the Equator and 90° East longitude</li>
+     *     <li>The z-axis pointing towards the North Pole</li>
+     * </ul>
+     * and the orbital elements are:
+     * <ul>
+     *     <li>Radial distance (magnitude of the position vector)</li>
+     *     <li>Inclination (angle between the orbital plane and the ECI z-axis)</li>
+     *     <li>Longitude of the Ascending Node (angle between the ECI x-axis and the descending node in the orbital plane</li>
+     * </ul>
+     * @param riO the KOE in the following order: radial distance, inclination, longitude of the ascending node (Right ascention)
+     * @return List[x, y, z] in ECEF reference frame
+     */
+    public static List<Double> koe2ecef(List<Double> riO){
+        double i = riO.get(1);
+        double Omega = riO.get(2);
+        double semiMajorAxis = riO.get(0);
+
+        // Calculate the satellite's position in the orbital plane for a circular orbit
+        double x_orbital = semiMajorAxis * Math.cos(0);  // Mean anomaly is 0 for a circular orbit
+        double y_orbital = semiMajorAxis * Math.sin(0);
+
+        // Perform the coordinate transformations to ECEF
+        double x_ecef = Math.cos(Omega) * x_orbital - Math.sin(Omega) * y_orbital;
+        double y_ecef = Math.sin(Omega) * x_orbital + Math.cos(Omega) * y_orbital;
+        double z_ecef = y_orbital * Math.sin(i);
+
+        return new ArrayList<>(Arrays.asList(x_ecef, y_ecef, z_ecef));
+    }
+
+    /**
+     * Calculates the cartesian distance between two points.
+     * @param xyz1 first point
+     * @param xyz2 second point
+     * @return the cartesian distance
+     */
+    public static double getCartesianDistance(List<Double> xyz1, List<Double> xyz2){
+        if (xyz1.size() != xyz2.size()){
+            throw new InvalidParameterException("The vectorial spaces must be of the same size");
+        }
+        double cumsum = 0;
+        for (int i = 0; i < xyz1.size(); i++){
+            cumsum += Math.pow((xyz1.get(i) - xyz2.get(i)), 2);
+        }
+        return Math.sqrt(cumsum);
+    }
 }
