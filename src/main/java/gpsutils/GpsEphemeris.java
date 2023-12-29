@@ -20,34 +20,34 @@ public class GpsEphemeris {
     public double af1 = 0;
     public double af2 = 0;
     public double tgd = 0; // time differential between L1 and L2 signals
-    public double rootOfA; // to set. Square root of the orbital radius
+    public double rootOfA; // to set. Square root of the orbital radius TODO in creation of satellites
     public double e = 0; // eccentricity = 0 -> circular orbits
 
     /**
      * Inclination angle at reference time (radians)
      */
-    public double i0; // to set
+    public double i0; // to set TODO in creation of satellites
     public double iDot = 0;
 
     /**
      * Argument of perigee (radians)
      */
-    public double omega; // to set
+    public double omega; // to set TODO in creation of satellites (0)
 
     /**
      * Longitude of ascending node of orbit plane (radians)
      */
-    public double omega0; // to set
+    public double omega0; // to set TODO in creation of satellites
 
     /**
      * Rate of right ascension (radians/s)
      */
-    public double omegaDot; // to set od : satisfy o0 + (od - oe) * tk - oe * toe. Where oe = 7.2921151467 * 10 ^ -5 rad/s
+    public double omegaDot; // to set od : satisfy o0 + (od - oe) * tk - oe * toe. Where oe = 7.2921151467 * 10 ^ -5 rad/s TODO in creation of satellites
 
     /**
      * Mean anomaly of reference time (radians)
      */
-    public double m0; // to set.
+    public double m0; // to set. TODO in creation of satellites
     public double deltaN = 0;
     // Corrections
     public double crc = 0;
@@ -57,7 +57,7 @@ public class GpsEphemeris {
     public double cic = 0;
     public double cis = 0;
 
-    public int prn; // to set
+    public int prn; // to set TODO in creation of satellites
 
     /**
      * Provides the basic keplerian orbital elements list.
