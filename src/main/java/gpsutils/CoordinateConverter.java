@@ -159,4 +159,8 @@ public class CoordinateConverter {
         }
         return Math.sqrt(cumsum);
     }
+
+    public static double getSatelliteDistance(GpsPosition receiverPosition, GpsEphemeris satellite){
+        return getCartesianDistance(geodetic2ecef(receiverPosition), koe2ecef(satellite.asKoe()));
+    }
 }
