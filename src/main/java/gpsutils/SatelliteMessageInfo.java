@@ -5,17 +5,19 @@ package gpsutils;
  * @author Angelo G. Gaillet
  */
 public class SatelliteMessageInfo {
-    private static final int NUM_NAV_MSGS = 4;
-    private final int prn;
-    private double deltaT; // in seconds
+    private static int PROGRESSIVE = 0;
+    private final double deltaT; // in seconds
     private final GpsEphemeris ephemeris;
     private final GpsSupportData supportData;
 
-    public SatelliteMessageInfo(int prn, GpsEphemeris ephemeris, GpsSupportData supportData, int deltaT){
-        this.prn = prn;
+    public SatelliteMessageInfo(GpsEphemeris ephemeris, GpsSupportData supportData, double deltaT){
         this.ephemeris = ephemeris;
         this.supportData = supportData;
         this.deltaT = deltaT;
+        PROGRESSIVE ++;
+        ephemeris.week = GpsTimeUtil.getCurrentGpsWeek();
+        ephemeris.iode = PROGRESSIVE;
+        ephemeris.iodc = PROGRESSIVE;
     }
 
     public GpsEphemeris getEphemeris() {
@@ -28,17 +30,9 @@ public class SatelliteMessageInfo {
 
     /**
      * Returns the spoofed transmission time in seconds.
-     * @return an int value representing the signal propagation time from satellite to receiver in seconds.
+     * @return a double value representing the signal propagation time from satellite to receiver in seconds.
      */
     public double getDeltaT() {
         return deltaT;
-    }
-
-    public void setDeltaT(double deltaT){
-        this.deltaT = deltaT;
-    }
-
-    public int getPrn() {
-        return prn;
     }
 }
