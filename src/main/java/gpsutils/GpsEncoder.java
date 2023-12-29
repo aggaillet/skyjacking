@@ -112,7 +112,7 @@ public final class GpsEncoder {
     private static final int IONOSPHERIC_PARAMETERS_PAGE_INDEX = 62;
     private static final int IONOSPHERIC_PARAMETERS_PAGE_LENGTH = 6;
 
-    public byte[] createFirstSubframe(GpsEphemeris ephemeris, int tow) {
+    public static byte[] createFirstSubframe(GpsEphemeris ephemeris, int tow) {
         byte[] result = new byte[L1_CA_SUBFRAME_LENGTH_BYTES];
         toBits(SUBFRAMEID_INDEX, SUBFRAMEID_LENGTH, 1, result);
         toBits(TOW_INDEX, TOW_LENGTH, tow, result);
@@ -129,7 +129,7 @@ public final class GpsEncoder {
         return result;
     }
 
-    public byte[] createSecondSubframe(GpsEphemeris ephemeris, int tow){
+    public static byte[] createSecondSubframe(GpsEphemeris ephemeris, int tow){
         byte[] result = new byte[L1_CA_SUBFRAME_LENGTH_BYTES];
         toBits(SUBFRAMEID_INDEX, SUBFRAMEID_LENGTH, 2, result);
         toBits(TOW_INDEX, TOW_LENGTH, tow, result);
@@ -151,7 +151,7 @@ public final class GpsEncoder {
         return result;
     }
 
-    public byte[] createThirdSubframe(GpsEphemeris ephemeris, int tow){
+    public static byte[] createThirdSubframe(GpsEphemeris ephemeris, int tow){
         byte[] result = new byte[L1_CA_SUBFRAME_LENGTH_BYTES];
         toBits(SUBFRAMEID_INDEX, SUBFRAMEID_LENGTH, 3, result);
         toBits(TOW_INDEX, TOW_LENGTH, tow, result);
@@ -173,7 +173,7 @@ public final class GpsEncoder {
         return result;
     }
 
-    public byte[] createFourthSubframe(GpsSupportData supportData, int tow){
+    public static byte[] createFourthSubframe(GpsSupportData supportData, int tow){
         byte[] result = new byte[L1_CA_SUBFRAME_LENGTH_BYTES];
         toBits(SUBFRAMEID_INDEX, SUBFRAMEID_LENGTH, 4, result);
         toBits(TOW_INDEX, TOW_LENGTH, tow, result);
@@ -193,7 +193,7 @@ public final class GpsEncoder {
         return result;
     }
 
-    private void ionosphericParamToBits(double[] p, int index0, double pow_a, int index1, double pow_b, int index2, double pow_c, int index3, byte[] target) {
+    private static void ionosphericParamToBits(double[] p, int index0, double pow_a, int index1, double pow_b, int index2, double pow_c, int index3, byte[] target) {
         toBits(index0, A_B_LENGTH, (int) (p[0] / pow_a), target);
         toBits(index1, A_B_LENGTH, (int) (p[1] / pow_b), target);
         toBits(index2, A_B_LENGTH, (int) (p[2] / pow_c), target);
@@ -208,7 +208,7 @@ public final class GpsEncoder {
      * @param data the value to be written
      * @param target the target byte array
      */
-    private void toBits(int index, int length, int data, byte[] target) {
+    private static void toBits(int index, int length, int data, byte[] target) {
         for (int i = 0 ; i < length; ++i) {
             int workingIndex = index + i;
             int wordIndex = workingIndex / WORD_SIZE_BITS;
