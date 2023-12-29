@@ -34,7 +34,6 @@ public class MessageAlgorithmManager {
             default:
                 throw new RuntimeException("Invalid algorithm type");
         }
-        algorithm.setReferenceData(new GpsEphemeris(), new GpsSupportData());
     }
 
     public List<SatelliteMessageInfo> computeMessage(GpsPosition spoofedPosition){

@@ -19,11 +19,4 @@ public interface IMessageAlgorithm {
      * @return a {@link List} of {@link SatelliteMessageInfo} objects containing the information to be transmitted by each satellite's message sequence.
      */
     public List<SatelliteMessageInfo> computeMessage(GpsPosition spoofedPosition);
-
-    /**
-     * Sets reference parameters to be used for calculations.
-     * @param referenceEphemeris reference Ephemeris values to be used.
-     * @param referenceSupportData reference ionospheric and support data to be used.
-     */
-    public void setReferenceData(GpsEphemeris referenceEphemeris, GpsSupportData referenceSupportData);
 }
