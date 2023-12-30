@@ -10,6 +10,10 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+/**
+ * Handles communications with an HTTP-based UAV simulator.
+ * @author Malik Willemy
+ */
 public class SimulatorController implements IMessageController {
     private final String API_LINK = "";
 

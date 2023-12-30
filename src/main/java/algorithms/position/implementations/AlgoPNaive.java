@@ -4,7 +4,9 @@ import algorithms.position.IPositionAlgorithm;
 import gpsutils.GpsPosition;
 
 /**
- * @author Angelo G. Gaillet
+ * Naive algorithm for spoofed position determination.
+ * Provides the symmetric position to the target position with respect to the current real position of the UAV.
+ * @author A.G. Gaillet
  */
 public class AlgoPNaive implements IPositionAlgorithm {
     /**

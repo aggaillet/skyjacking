@@ -4,7 +4,8 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
- * @author Angelo G. Gaillet
+ * Utility class providing functions to deal with GPS time.
+ * @author A.G. Gaillet
  */
 public class GpsTimeUtil {
     // UTC to GPS time offset in seconds
@@ -33,6 +34,10 @@ public class GpsTimeUtil {
         return gmst;
     }
 
+    /**
+     * Get the current gps week.
+     * @return the number of the current gps week.
+     */
     public static int getCurrentGpsWeek(){
         // Get the current UTC time in milliseconds
         long currentUtcTimeMillis = System.currentTimeMillis();
@@ -42,6 +47,10 @@ public class GpsTimeUtil {
         return (int)(gpsTimeSeconds / SECONDS_IN_GPS_WEEK);
     }
 
+    /**
+     * Get the current Time Of the Week (TOW).
+     * @return the TOW at the time of the method call.
+     */
     public static double getTowOfNow(){
         // Get the current UTC time in milliseconds
         long currentUtcTimeMillis = System.currentTimeMillis();
@@ -51,6 +60,11 @@ public class GpsTimeUtil {
         return (gpsTimeSeconds % SECONDS_IN_GPS_WEEK); // TODO: verify not 1.5 seconds
     }
 
+    /**
+     * Get the Time Of the Week in "delay" time.
+     * @param delay delay in seconds.
+     * @return the TOW in delay seconds.
+     */
     public static double getTowDelayed(double delay){
         return (getTowOfNow() + delay) % SECONDS_IN_GPS_WEEK;
     }

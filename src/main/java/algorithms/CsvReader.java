@@ -13,7 +13,7 @@ import java.util.Map;
 
 /**
  * Utility class that allows for reading a CSV file.
- * @author Angelo G. Gaillet
+ * @author A.G. Gaillet
  */
 public class CsvReader {
     /**

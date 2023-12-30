@@ -5,7 +5,7 @@ import java.util.List;
 
 /**
  * Gps Satellite Ephemeris
- * @author Angelo G. Gaillet
+ * @author A.G. Gaillet
  */
 public class GpsEphemeris {
     public int week;
@@ -57,7 +57,7 @@ public class GpsEphemeris {
     public double cic = 0;
     public double cis = 0;
 
-    public int prn; // to set TODO in creation of satellites x
+    public int prn;
 
     /**
      * Provides the basic keplerian orbital elements list.

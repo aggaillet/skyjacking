@@ -5,26 +5,13 @@ import java.time.format.DateTimeFormatter;
 
 /**
  * Position Class regroup the GPS Data Position of the UAV, plus its time
+ * @author Malik Willemy
  */
 public class GpsPosition {
     private final double lat;
     private final double lon;
     private final double alt;
     private final OffsetDateTime dateTime;
-
-    public GpsPosition() {
-        this.lat = 0;
-        this.lon = 0;
-        this.alt = 0;
-        this.dateTime = null;
-    }
-
-    public GpsPosition(double lat, double lon, double alt, String dateTimeString) {
-        this.lat = lat;
-        this.lon = lon;
-        this.alt = alt;
-        this.dateTime = OffsetDateTime.parse(dateTimeString, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
-    }
 
     public GpsPosition(double lat, double lon, double alt, OffsetDateTime dateTime) {
         this.lat = lat;
@@ -33,11 +20,12 @@ public class GpsPosition {
         this.dateTime = dateTime;
     }
 
+    public GpsPosition(double lat, double lon, double alt, String dateTimeString) {
+        this(lat, lon, alt, OffsetDateTime.parse(dateTimeString, DateTimeFormatter.ISO_OFFSET_DATE_TIME)); //TODO check formatter is correct
+    }
+
     public GpsPosition(double lat, double lon, double alt) {
-        this.lat = lat;
-        this.lon = lon;
-        this.alt = alt;
-        this.dateTime = null;
+        this(lat, lon, alt, (OffsetDateTime) null);
     }
 
     public double getLat() {

@@ -11,7 +11,7 @@ import static gpsutils.CoordinateConverter.*;
 /**
  * Message spoofing algorithm.
  * Leverages trasmission timestamp to spoof the receiver position.
- * @author Angelo G. Gaillet
+ * @author A.G. Gaillet
  */
 public class AlgoMTimestamp implements IMessageAlgorithm {
     private static final double C = 2.99792458 * Math.pow(10, 8);

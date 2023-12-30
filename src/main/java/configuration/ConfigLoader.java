@@ -1,7 +1,6 @@
 package configuration;
 
 import algorithms.message.EMessageAlgorithm;
-import algorithms.position.EPositionAlgorithm;
 import gpsutils.GpsPosition;
 import org.json.JSONObject;
 import outputFeature.OutputData;
@@ -16,7 +15,6 @@ import java.util.List;
 public class ConfigLoader {
     private final String directory; // where to find the file
     private final EMessageAlgorithm msgAlgoType; // the type of algo the user wishes to apply the spoofing with
-    private final EPositionAlgorithm posAlgoType; // the type of algo the user wishes to apply the spoofing with
     private final GpsPosition destination; // the final destination wanted by the user
     private final double latitude; // the latitude of the desired position
     private final double altitude; // the altitude of the desired position
@@ -32,7 +30,7 @@ public class ConfigLoader {
         JSONObject mainJsonObject = new JSONObject(config);
         this.directory = mainJsonObject.getString("Directory");
         this.msgAlgoType = EMessageAlgorithm.valueOf(mainJsonObject.getString("MessageAlgorithmType"));
-        this.posAlgoType = EPositionAlgorithm.valueOf(mainJsonObject.getString("PositionAlgorithmType"));
+        //this.posAlgoType = EPositionAlgorithm.valueOf(mainJsonObject.getString("PositionAlgorithmType"));
         JSONObject wantedDestination = mainJsonObject.getJSONObject("destination");
         this.latitude = wantedDestination.getDouble("latitude");
         this.altitude = wantedDestination.getDouble("altitude");
@@ -67,9 +65,6 @@ public class ConfigLoader {
 
     public EMessageAlgorithm getMsgAlgoType() {
         return msgAlgoType;
-    }
-    public EPositionAlgorithm getPosAlgoType() {
-        return posAlgoType;
     }
 
     public String getDirectory() {

@@ -5,7 +5,7 @@ import java.util.*;
 
 /**
  * Contains static methods providing common operations and conversions between reference frames.
- * @author Angelo G. Gaillet
+ * @author A.G. Gaillet
  */
 public class CoordinateConverter {
 
@@ -160,6 +160,12 @@ public class CoordinateConverter {
         return Math.sqrt(cumsum);
     }
 
+    /**
+     * Provides the distance between the receiver and the satellite.
+     * @param receiverPosition the position of the receiver.
+     * @param satellite the ephemeris describing the position and orbit of the satellite.
+     * @return the distance.
+     */
     public static double getSatelliteDistance(GpsPosition receiverPosition, GpsEphemeris satellite){
         return getCartesianDistance(geodetic2ecef(receiverPosition), koe2ecef(satellite.asKoe()));
     }

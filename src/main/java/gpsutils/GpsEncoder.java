@@ -2,7 +2,7 @@ package gpsutils;
 
 /**
  * Gps Navigation Messages encoder.
- * @author Angelo G. Gaillet
+ * @author A.G. Gaillet
  */
 public final class GpsEncoder {
     private static final byte IONOSPHERIC_PARAMETERS_PAGE_18_SV_ID = 56;
@@ -112,6 +112,12 @@ public final class GpsEncoder {
     private static final int IONOSPHERIC_PARAMETERS_PAGE_INDEX = 62;
     private static final int IONOSPHERIC_PARAMETERS_PAGE_LENGTH = 6;
 
+    /**
+     * Generates the first subframe of the L1 C/A navigation message.
+     * @param ephemeris the ephemeris of the sending satellite.
+     * @param tow the Time Of the Week at which the second subframe is expected to be sent.
+     * @return the subframe's bytecode
+     */
     public static byte[] createFirstSubframe(GpsEphemeris ephemeris, int tow) {
         byte[] result = new byte[L1_CA_SUBFRAME_LENGTH_BYTES];
         toBits(SUBFRAMEID_INDEX, SUBFRAMEID_LENGTH, 1, result);
@@ -129,6 +135,12 @@ public final class GpsEncoder {
         return result;
     }
 
+    /**
+     * Generates the second subframe of the L1 C/A navigation message.
+     * @param ephemeris the ephemeris of the sending satellite.
+     * @param tow the Time Of the Week at which the third subframe is expected to be sent.
+     * @return the subframe's bytecode
+     */
     public static byte[] createSecondSubframe(GpsEphemeris ephemeris, int tow){
         byte[] result = new byte[L1_CA_SUBFRAME_LENGTH_BYTES];
         toBits(SUBFRAMEID_INDEX, SUBFRAMEID_LENGTH, 2, result);
@@ -151,6 +163,12 @@ public final class GpsEncoder {
         return result;
     }
 
+    /**
+     * Generates the third subframe of the L1 C/A navigation message.
+     * @param ephemeris the ephemeris of the sending satellite.
+     * @param tow the Time Of the Week at which the fourth subframe is expected to be sent.
+     * @return the subframe's bytecode
+     */
     public static byte[] createThirdSubframe(GpsEphemeris ephemeris, int tow){
         byte[] result = new byte[L1_CA_SUBFRAME_LENGTH_BYTES];
         toBits(SUBFRAMEID_INDEX, SUBFRAMEID_LENGTH, 3, result);
@@ -173,6 +191,12 @@ public final class GpsEncoder {
         return result;
     }
 
+    /**
+     * Generates the fourth subframe of the L1 C/A navigation message.
+     * @param supportData the ionospheric correction and other supporting information to be sent by the satellite.
+     * @param tow the Time Of the Week at which the fifth subframe is expected to be sent.
+     * @return the subframe's bytecode
+     */
     public static byte[] createFourthSubframe(GpsSupportData supportData, int tow){
         byte[] result = new byte[L1_CA_SUBFRAME_LENGTH_BYTES];
         toBits(SUBFRAMEID_INDEX, SUBFRAMEID_LENGTH, 4, result);

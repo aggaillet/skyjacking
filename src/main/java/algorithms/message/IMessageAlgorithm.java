@@ -1,8 +1,6 @@
 package algorithms.message;
 
-import gpsutils.GpsEphemeris;
 import gpsutils.GpsPosition;
-import gpsutils.GpsSupportData;
 import gpsutils.SatelliteMessageInfo;
 
 import java.util.List;
@@ -10,7 +8,7 @@ import java.util.List;
 /**
  * Interface for all algorithms calculating the parameters of the navigation messages corresponding to the
  * multilateration of a given spoofed {@link GpsPosition}.
- * @author Angelo G. Gaillet
+ * @author A.G. Gaillet
  */
 public interface IMessageAlgorithm {
     /**

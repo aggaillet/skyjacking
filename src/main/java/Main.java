@@ -21,7 +21,8 @@ import java.util.concurrent.TimeUnit;
 import static gpsutils.GpsTimeUtil.getTowDelayed;
 
 /**
- * @author Angelo G. Gaillet
+ * Main class.
+ * @author A.G. Gaillet
  */
 public class Main {
         static MessageAlgorithmManager messageAlgorithmManager;
@@ -54,26 +55,26 @@ public class Main {
                 double delayS = delay / 1000.;
                 if (4 * delay < configLoader.getRefreshRate()){
                         throw new RuntimeException("Refresh rate is too fast. Minimum supported: " + 4 * delay + " ns");
-                } else if (delayS < satMsgInfo.getDeltaT()) {
+                } else if (delayS < satMsgInfo.deltaT()) {
                         throw new RuntimeException("Unable to send messages in the past. Please increase transmission delay");
                 }
 
-                int tow = (int) (getTowDelayed(delayS) - satMsgInfo.getDeltaT());
-                satMsgInfo.getEphemeris().toc = tow;
-                byte [] msg1 = GpsEncoder.createFirstSubframe(satMsgInfo.getEphemeris(), tow);
+                int tow = (int) (getTowDelayed(delayS) - satMsgInfo.deltaT());
+                satMsgInfo.ephemeris().toc = tow;
+                byte [] msg1 = GpsEncoder.createFirstSubframe(satMsgInfo.ephemeris(), tow);
                 scheduler.scheduleSend(msg1, OffsetDateTime.now().plusNanos(delay));
 
                 tow += delayS;
-                satMsgInfo.getEphemeris().toe = tow;
-                byte [] msg2 = GpsEncoder.createSecondSubframe(satMsgInfo.getEphemeris(), tow);
+                satMsgInfo.ephemeris().toe = tow;
+                byte [] msg2 = GpsEncoder.createSecondSubframe(satMsgInfo.ephemeris(), tow);
                 scheduler.scheduleSend(msg2, OffsetDateTime.now().plusNanos(2L * delay));
 
                 tow += delayS;
-                byte [] msg3 = GpsEncoder.createThirdSubframe(satMsgInfo.getEphemeris(), tow);
+                byte [] msg3 = GpsEncoder.createThirdSubframe(satMsgInfo.ephemeris(), tow);
                 scheduler.scheduleSend(msg3, OffsetDateTime.now().plusNanos(3L * delay));
 
                 tow += delayS;
-                byte [] msg4 = GpsEncoder.createFourthSubframe(satMsgInfo.getSupportData(), tow);
+                byte [] msg4 = GpsEncoder.createFourthSubframe(satMsgInfo.supportData(), tow);
                 scheduler.scheduleSend(msg4, OffsetDateTime.now().plusNanos(4L * delay));
         }
 
