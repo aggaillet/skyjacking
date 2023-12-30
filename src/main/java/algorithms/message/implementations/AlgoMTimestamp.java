@@ -1,15 +1,16 @@
 package algorithms.message.implementations;
 
+import algorithms.CsvReader;
 import algorithms.message.IMessageAlgorithm;
 import gpsutils.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
+
 import static gpsutils.CoordinateConverter.*;
 
 /**
+ * Message spoofing algorithm.
+ * Leverages trasmission timestamp to spoof the receiver position.
  * @author Angelo G. Gaillet
  */
 public class AlgoMTimestamp implements IMessageAlgorithm {
@@ -54,9 +55,21 @@ public class AlgoMTimestamp implements IMessageAlgorithm {
     }
 
     private List<GpsEphemeris> createFakeSatellites(){
-        List<GpsEphemeris> satellites = Collections.unmodifiableList(new ArrayList<>());
-        // TODO: generate ephemeris for a full constellation
-        return satellites;
+        List<GpsEphemeris> satellites = new ArrayList<>(); ;
+        Map<String, List<String>> constellation = CsvReader.readCsvFromResources("constellation.csv");
+        List<Integer> prn = constellation.get("PRN").stream().map(Integer::parseInt).toList();
+        List<Double> inclination = constellation.get("INCLINATION").stream().map(Double::parseDouble).toList();
+        List<Double> rightAscension = constellation.get("RA_OF_ASC_NODE").stream().map(Double::parseDouble).toList();
+        List<Double> argPeriapsis = constellation.get("ARG_OF_PERICENTER").stream().map(Double::parseDouble).toList();
+        List<Double> meanAnomaly = constellation.get("MEAN_ANOMALY").stream().map(Double::parseDouble).toList();
+        for (int i = 0; i < prn.size(); i++) {
+            GpsEphemeris e = new GpsEphemeris();
+            e.i0 = inclination.get(i);
+            e.omega0 = rightAscension.get(i);
+            e.omega = argPeriapsis.get(i);
+            e.m0 = argPeriapsis.get(i);
+        }
+        return Collections.unmodifiableList(satellites);
     }
 
     private List<GpsEphemeris> getVisibleSatellites(GpsPosition receiverPosition){
