@@ -26,6 +26,13 @@ public class GpsPosition {
         this.dateTime = OffsetDateTime.parse(dateTimeString, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
     }
 
+    public GpsPosition(double lat, double lon, double alt, OffsetDateTime dateTime) {
+        this.lat = lat;
+        this.lon = lon;
+        this.alt = alt;
+        this.dateTime = dateTime;
+    }
+
     public GpsPosition(double lat, double lon, double alt) {
         this.lat = lat;
         this.lon = lon;

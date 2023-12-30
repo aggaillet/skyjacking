@@ -22,15 +22,4 @@ public class AlgoMConstPropagation implements IMessageAlgorithm { //TODO: IMPLEM
     public List<SatelliteMessageInfo> computeMessage(GpsPosition spoofedPosition) {
         return null;
     }
-
-    /**
-     * Sets reference parameters to be used for calculations.
-     *
-     * @param referenceEphemeris   reference Ephemeris values to be used.
-     * @param referenceSupportData reference ionospheric and support data to be used.
-     */
-    @Override
-    public void setReferenceData(GpsEphemeris referenceEphemeris, GpsSupportData referenceSupportData) {
-
-    }
 }
