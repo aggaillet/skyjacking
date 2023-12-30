@@ -64,10 +64,11 @@ public class AlgoMTimestamp implements IMessageAlgorithm {
         List<Double> meanAnomaly = constellation.get("MEAN_ANOMALY").stream().map(Double::parseDouble).toList();
         for (int i = 0; i < prn.size(); i++) {
             GpsEphemeris e = new GpsEphemeris();
+            e.prn = prn.get(i);
             e.i0 = inclination.get(i);
             e.omega0 = rightAscension.get(i);
             e.omega = argPeriapsis.get(i);
-            e.m0 = argPeriapsis.get(i);
+            e.m0 = meanAnomaly.get(i);
         }
         return Collections.unmodifiableList(satellites);
     }
