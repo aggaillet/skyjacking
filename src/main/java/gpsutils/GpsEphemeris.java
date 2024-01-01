@@ -2,6 +2,7 @@ package gpsutils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Gps Satellite Ephemeris
@@ -70,5 +71,63 @@ public class GpsEphemeris {
         keo.add(2, omega0);
         keo.add(3, omega + m0);
         return keo;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        GpsEphemeris that = (GpsEphemeris) o;
+        return week == that.week && ura == that.ura && svHealth == that.svHealth && iode == that.iode &&
+                iodc == that.iodc && Double.compare(that.toc, toc) == 0 && Double.compare(that.toe, toe) == 0
+                && Double.compare(that.af0, af0) == 0 && Double.compare(that.af1, af1) == 0 &&
+                Double.compare(that.af2, af2) == 0 && Double.compare(that.tgd, tgd) == 0 &&
+                Double.compare(that.rootOfA, rootOfA) == 0 && Double.compare(that.e, e) == 0 &&
+                Double.compare(that.i0, i0) == 0 && Double.compare(that.iDot, iDot) == 0 &&
+                Double.compare(that.omega, omega) == 0 && Double.compare(that.omega0, omega0) == 0 &&
+                Double.compare(that.omegaDot, omegaDot) == 0 && Double.compare(that.m0, m0) == 0 &&
+                Double.compare(that.deltaN, deltaN) == 0 && Double.compare(that.crc, crc) == 0 &&
+                Double.compare(that.crs, crs) == 0 && Double.compare(that.cuc, cuc) == 0 &&
+                Double.compare(that.cus, cus) == 0 && Double.compare(that.cic, cic) == 0 &&
+                Double.compare(that.cis, cis) == 0 && prn == that.prn;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(week, ura, svHealth, iode, iodc, toc, toe, af0, af1, af2, tgd, rootOfA, e, i0, iDot, omega,
+                omega0, omegaDot, m0, deltaN, crc, crs, cuc, cus, cic, cis, prn);
+    }
+
+    @Override
+    public String toString() {
+        return "GpsEphemeris{" +
+                "week=" + week +
+                ", ura=" + ura +
+                ", svHealth=" + svHealth +
+                ", iode=" + iode +
+                ", iodc=" + iodc +
+                ", toc=" + toc +
+                ", toe=" + toe +
+                ", af0=" + af0 +
+                ", af1=" + af1 +
+                ", af2=" + af2 +
+                ", tgd=" + tgd +
+                ", rootOfA=" + rootOfA +
+                ", e=" + e +
+                ", i0=" + i0 +
+                ", iDot=" + iDot +
+                ", omega=" + omega +
+                ", omega0=" + omega0 +
+                ", omegaDot=" + omegaDot +
+                ", m0=" + m0 +
+                ", deltaN=" + deltaN +
+                ", crc=" + crc +
+                ", crs=" + crs +
+                ", cuc=" + cuc +
+                ", cus=" + cus +
+                ", cic=" + cic +
+                ", cis=" + cis +
+                ", prn=" + prn +
+                '}';
     }
 }
