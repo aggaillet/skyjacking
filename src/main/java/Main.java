@@ -25,11 +25,14 @@ import static gpsutils.GpsTimeUtil.getTowDelayed;
  * @author A.G. Gaillet
  */
 public class Main {
+
+        private static final String urlConfigFile = "src/main/java/configuration/configuration.json";  //HEIA_COL: added constant for config file url
+
         static MessageAlgorithmManager messageAlgorithmManager;
         static IMessageController messageController = new SimulatorController();
         static Scheduler scheduler = new Scheduler(5, messageController);
         static List<IOutput> outputs;
-        static ConfigLoader configLoader = new ConfigLoader();
+        static ConfigLoader configLoader = new ConfigLoader(urlConfigFile);     //HEIA_COL: using new constant to create the configLoader object
         static IPositionAlgorithm positionAlgorithm = new AlgoPNaive(); // TODO: temporary solution - remove hardcoding
 
         public static void main(String[] args){
