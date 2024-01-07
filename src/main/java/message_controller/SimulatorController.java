@@ -95,5 +95,9 @@ public class SimulatorController implements IMessageController {
             throw new RuntimeException(exception);
         }
     }
+
+    public String getAPI_LINK(){
+        return this.API_LINK;
+    }
 }
 
