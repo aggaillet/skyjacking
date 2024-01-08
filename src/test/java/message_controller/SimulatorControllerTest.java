@@ -1,17 +1,18 @@
 package message_controller;
 
 
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
+import com.sun.net.httpserver.HttpServer;
 import gpsutils.GpsPosition;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.powermock.reflect.Whitebox;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
+import java.io.*;
+import java.net.InetSocketAddress;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.stream.Stream;
@@ -30,8 +31,8 @@ class SimulatorControllerTest {
 
     //SUT objects declaration
     SimulatorController simController1;
-
-
+    static HttpServer server;
+    static int port = 8000;
     private static boolean alreadyInit = false;
 
     /**
@@ -40,10 +41,26 @@ class SimulatorControllerTest {
      * Reason: BeforeAll is a static method, so can't modify instance attributes inside it
      */
     @BeforeEach
-    void setup(){
+    void setup() {
         if(alreadyInit) return;
 
         simController1 = new SimulatorController();
+
+    }
+
+    @BeforeAll
+    public static void serverStarter() throws IOException {
+        server = HttpServer.create(new InetSocketAddress(port), 0);
+        server.createContext("/", new Handler());
+        server.setExecutor(null);
+
+        server.start();
+        System.out.println("Mock HTTP Server is running on port " + port);
+    }
+
+    @AfterAll
+    public static void tearDown() {
+        server.stop(port);
     }
 
 
@@ -52,7 +69,6 @@ class SimulatorControllerTest {
      * ID: TC.02
      * Summary: "To verify that the system successfully retrieves the current UAV position."
      * ---
-     *
      * --- Description ---
      * ID: UT-02A
      * Desc: A simple test that check an Exception is thrown if HTTP_URL of Simulator controller is an empty string
@@ -145,15 +161,6 @@ class SimulatorControllerTest {
     }
 
 
-
-
-
-
-
-
-
-
-
     /**
      * DISABLED /!\
      * --- Origin ---
@@ -182,5 +189,49 @@ class SimulatorControllerTest {
 
 
         return elemsContainer.stream();
+    }
+
+
+    static class Handler implements HttpHandler {
+        @Override
+        public void handle(HttpExchange exchange) throws IOException {
+            String path = exchange.getRequestURI().getPath();
+
+            if (path.equals("/requestPosition")) {
+                String jsonResponse =
+                        "{\"location\":{" +
+                                "\"longitude\":43.5," +
+                                "\"latitude\":1.4," +
+                                "\"altitude\":100" +
+                                "}," +
+                                "\"time\":\"2023-11-21T11:44:00.034524Z\"}";
+
+                exchange.getResponseHeaders().set("Content-Type", "application/json");
+                exchange.sendResponseHeaders(200, jsonResponse.getBytes().length);
+
+                OutputStream os = exchange.getResponseBody();
+                os.write(jsonResponse.getBytes());
+                os.close();
+            } else if (path.equals("/sendSpoofedMsg")) {
+                if (exchange.getRequestMethod().equalsIgnoreCase("POST")) {
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(exchange.getRequestBody()));
+                    StringBuilder requestBody = new StringBuilder();
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        requestBody.append(line);
+                    }
+                    reader.close();
+
+                    System.out.println("Received message: " + requestBody);
+
+                    exchange.sendResponseHeaders(200, 0);
+                } else {
+                    exchange.sendResponseHeaders(405, 0);
+                }
+            } else {
+                exchange.sendResponseHeaders(404, 0);
+            }
+            exchange.getResponseBody().close();
+        }
     }
 }
