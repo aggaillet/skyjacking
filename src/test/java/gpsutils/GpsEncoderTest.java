@@ -1,5 +1,7 @@
 package gpsutils;
 
+import org.junit.jupiter.api.Disabled;
+
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
@@ -14,6 +16,7 @@ class GpsEncoderTest {
      * The Gps Encoder shall generate a spoofed GPS message in Android-standard bytecode as described in Annex 2 to the SDD.
      * Tested via subsequent encoding and decoding of all subframes and equality checking.
      */
+    @Disabled
     @org.junit.jupiter.api.Test
     void SW_6(){
         // TODO implement.

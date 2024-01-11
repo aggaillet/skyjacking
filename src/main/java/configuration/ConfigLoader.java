@@ -12,7 +12,7 @@ import java.util.List;
 public class ConfigLoader {
 
 
-    //"skyjacking/src/main/java/configuration/configuration.json"
+    final static String url = "src/main/java/configuration/configuration.json";
 
     private final String directory; // where to find the file
     private final EMessageAlgorithm msgAlgoType; // the type of algo the user wishes to apply the spoofing with
@@ -25,14 +25,15 @@ public class ConfigLoader {
     private final boolean resultingTrajectory; //the current trajectory of the uav, it is also up to user preference to see it or not
     private final int refreshRate; //it is a frequency of renewal of messages in nanoseconds
 
-    public ConfigLoader(String pathForConfigFile) {   //HEIA_COL: ADDED "path for config file" as argument of constructor
+    public ConfigLoader() {
 
-        StringBuilder configText = readConfiguration(pathForConfigFile);  //HEIA_COL: pass var to readConfig method
+        StringBuilder configText = readConfiguration(url);  //use default path
+
         String config = configText.toString();
         System.err.println(config);
         JSONObject mainJsonObject = new JSONObject(config);
         this.directory = mainJsonObject.getString("Directory");
-        this.msgAlgoType = EMessageAlgorithm.valueOf(mainJsonObject.getString("MessageAlgorithmType"));     //CHECK THIS
+        this.msgAlgoType = EMessageAlgorithm.valueOf(mainJsonObject.getString("MessageAlgorithmType"));
         //this.posAlgoType = EPositionAlgorithm.valueOf(mainJsonObject.getString("PositionAlgorithmType"));
         JSONObject wantedDestination = mainJsonObject.getJSONObject("destination");
         this.latitude = wantedDestination.getDouble("latitude");
@@ -47,11 +48,16 @@ public class ConfigLoader {
         this.refreshRate = dataLog.getInt("refreshRate");
     }
 
-    private StringBuilder readConfiguration(String pathForConfigFile){  //HEIA_COL: new arg, url to config file
+    protected StringBuilder readConfiguration(String path){     //path to config file, if empty: default url
         StringBuilder configText= new StringBuilder();
         String line ="";
         try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(pathForConfigFile));  //HEIA_COL: use here the path to create reader
+            BufferedReader bufferedReader;
+
+            if(path.isEmpty() || path.isBlank())
+                bufferedReader = new BufferedReader(new FileReader(url));   //if empty string: default path
+            else
+                bufferedReader = new BufferedReader(new FileReader(path));  //custom one
 
             while (line!=null){
                 line = bufferedReader.readLine();

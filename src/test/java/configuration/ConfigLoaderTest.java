@@ -1,51 +1,86 @@
 package configuration;
 
-import gpsutils.GpsPosition;
-import org.junit.jupiter.api.Disabled;
-import outputFeature.OutputData;
-import algorithms.message.EMessageAlgorithm;
+import org.json.JSONObject;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
-import java.lang.reflect.Field;
-import java.util.List;
-import java.util.Arrays;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
 
 
 /**
  * Units Tests for ConfigLoader class.
  * @author Heiarii Collenot
  */
+
 class ConfigLoaderTest {
 
     private static final String urlConfigFile = "src/main/java/configuration/configuration.json";
-
-    @Mock
-    private BufferedReader bufferedReader;
-
-    @InjectMocks
     private ConfigLoader configLoader;
 
+    /**
+     * SUT (system under test) initialization method.
+     * "BeforeEach" simulating a "BeforeALl"
+     * Reason: BeforeAll is a static method, so can't modify instance attributes inside it
+     */
+    private static boolean alreadyInit = false;
     @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
+    void setup() {
 
+        if(alreadyInit) return;
+
+        configLoader = new ConfigLoader();
     }
 
     /**
-     * IMPOSSIBLE TO TEST THE ConfigLoader CLASS WITH ITS ACTUAL IMPLEMENTATION /!\
-     * BECAUSE NOT POSSIBLE TO INJECT DEPENDENCIES
+     * --- Origin ---
+     * ID: TC.01
+     * Summary: "To verify that the Configuration Loader correctly reads the
+     *           user-input desired landing point from a configuration file."
+     *
+     * --- Description ---
+     * ID: UT-01-A
+     * Desc: todo
+     *
+     * ---
      */
+
+    @Test
+    void UT_01_A() throws IOException {
+
+        //extracting the real data from the file as oracle (the real values we should get from Config Loader)
+        StringBuilder configText= new StringBuilder();
+        String line ="";
+
+        //open buffer on the config file
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(urlConfigFile));
+
+        //read it
+        while (line!=null){
+            line = bufferedReader.readLine();
+            configText.append(line);
+        }
+        bufferedReader.close();
+
+        //transform wanted content into JSON
+        JSONObject jsonDestination = new JSONObject(configText.toString()).getJSONObject("destination");
+
+        //extract wanted inputs (lat, long, alt)
+        double realLat = jsonDestination.getDouble("latitude");
+        double realLong = jsonDestination.getDouble("longitude");
+        double realAlt = jsonDestination.getDouble("altitude");
+
+        //compare values
+        Assertions.assertEquals(realLong, configLoader.getLongitude());
+        Assertions.assertEquals(realLat, configLoader.getLatitude());
+        Assertions.assertEquals(realAlt, configLoader.getAltitude());
+    }
+
+
+    /* ------
 
 
     @Disabled
@@ -120,4 +155,8 @@ class ConfigLoaderTest {
         // verify results
         assertEquals(Arrays.asList(OutputData.INITIAL_TRAJ, OutputData.RESULT_TRAJ), selectedOutputs);
     }
+
+
+
+     */
 }

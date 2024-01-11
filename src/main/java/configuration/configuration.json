@@ -1,5 +1,5 @@
 {
-  "MessageAlgorithmType": "which one to use",
+  "MessageAlgorithmType": "TIMESTAMP",
   "PositionAlgorithmType": "which one to use",
   "Directory": "where",
   "destination":{
