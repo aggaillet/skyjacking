@@ -33,6 +33,8 @@ class ConfigLoaderTest {
         if(alreadyInit) return;
 
         configLoader = new ConfigLoader();
+
+        alreadyInit = true;
     }
 
     /**
@@ -155,8 +157,6 @@ class ConfigLoaderTest {
         // verify results
         assertEquals(Arrays.asList(OutputData.INITIAL_TRAJ, OutputData.RESULT_TRAJ), selectedOutputs);
     }
-
-
 
      */
 }

@@ -27,7 +27,7 @@ import static gpsutils.GpsTimeUtil.getTowDelayed;
 public class Main {
 
         static MessageAlgorithmManager messageAlgorithmManager;
-        static IMessageController messageController = new SimulatorController();
+        static IMessageController messageController = new SimulatorController("/"); // WHICH URL PUT HERE ??
         static Scheduler scheduler = new Scheduler(5, messageController);
         static List<IOutput> outputs;
         static ConfigLoader configLoader = new ConfigLoader();

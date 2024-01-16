@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 /**
@@ -15,7 +17,17 @@ import java.net.URL;
  * @author Malik Willemy
  */
 public class SimulatorController implements IMessageController {
-    private final String API_LINK = "";
+    private String API_LINK = "";
+
+    /**
+     * Constructor of SimulatorController
+     *
+     */
+    public SimulatorController(String apiLink){
+        this.API_LINK = apiLink;
+    }
+
+
 
     /**
      * Requests position data from the API-Simulator.
@@ -24,10 +36,14 @@ public class SimulatorController implements IMessageController {
      * @throws RuntimeException if an error occurs during API communication.
      */
     @Override
-    public GpsPosition requestPosition() {
+    public GpsPosition requestPosition(){
         try {
+
             //The URL make the link between the order requested and the answer
-            URL apiURL = new URL(API_LINK);
+            URL apiURL = new URI(API_LINK+"/requestPosition").toURL();  // WHAT TO PUT HERE ??
+
+            System.err.println("test");
+
             HttpURLConnection connection = (HttpURLConnection) apiURL.openConnection();
 
             if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
@@ -57,6 +73,8 @@ public class SimulatorController implements IMessageController {
             return new GpsPosition(longitude, latitude, altitude, time);
         } catch (IOException | JSONException exception) {
             throw new RuntimeException("API handling error occurred", exception);
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -71,7 +89,8 @@ public class SimulatorController implements IMessageController {
     public boolean sendSpoofedMsg(byte[] byteMessage) {
         try {
             //The URL make the link between the API and the system
-            URL apiURL = new URL(API_LINK);
+            URL apiURL = new URL(API_LINK+"/sendSpoofedMsg");   // WHAT TO PUT HERE ??
+
             HttpURLConnection connection = (HttpURLConnection) apiURL.openConnection();
 
             if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
