@@ -2,11 +2,10 @@ package configuration;
 
 import org.json.JSONObject;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.*;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
@@ -19,22 +18,18 @@ import java.io.IOException;
 class ConfigLoaderTest {
 
     private static final String urlConfigFile = "src/main/java/configuration/configuration.json";
-    private ConfigLoader configLoader;
+    private static ConfigLoader configLoader;
+
+    private static final String urlLogFile = ""; //TODO:
+
 
     /**
-     * SUT (system under test) initialization method.
-     * "BeforeEach" simulating a "BeforeALl"
-     * Reason: BeforeAll is a static method, so can't modify instance attributes inside it
+     * Setting up the SUT environment (before starting tests)
      */
-    private static boolean alreadyInit = false;
-    @BeforeEach
-    void setup() {
-
-        if(alreadyInit) return;
+    @BeforeAll
+    static void setup() {
 
         configLoader = new ConfigLoader();
-
-        alreadyInit = true;
     }
 
 
@@ -46,7 +41,7 @@ class ConfigLoaderTest {
      *
      * --- Description ---
      * ID: UT-01-A
-     * Desc: todo
+     * Desc: "Reads the config file real destination values, compare them to the ConfigLoader stored values."
      *
      * ---
      */
@@ -84,7 +79,7 @@ class ConfigLoaderTest {
 
     /**
      * --- Origin ---
-     * ID: TC.05
+     * ID: TC.06
      * Summary: "To verify the system's ability to provide the UAV's spoofed trajectory
      *           to the user in a textual form using the interface IOutput."
      *
@@ -94,14 +89,44 @@ class ConfigLoaderTest {
      *
      * ---
      */
+    @Disabled
     @Test
-    void UT_01_B(){
+    void UT_01_B() throws IOException {
 
+
+        StringBuilder configText= new StringBuilder();
+        String line ="";
+
+        //open buffer on the log file
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(urlLogFile));
+
+        //read it
+        while (line!=null){
+            line = bufferedReader.readLine();
+            configText.append(line);
+        }
+        bufferedReader.close();
+
+        //transform wanted content into JSON
+        JSONObject jsonDestination = new JSONObject(configText.toString()).getJSONObject("UAV_position");   //TODO: define structure of log file
+
+        //extract wanted inputs (lat, long, alt)
+        //TODO: choose the good data
+
+
+        //TODO: assertions
 
     }
 
 
+    /**
+     * Ending properly the SUT
+     */
+    @AfterAll
+    static void tearDown() {
 
+
+    }
 
 
     /* ------

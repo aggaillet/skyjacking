@@ -29,6 +29,10 @@ class SimulatorControllerTest {
     private final static double testLat = 1.4;
     private final static double testAlt = 100;
 
+
+    /**
+     * Setting up the SUT environment (before starting tests)
+     */
     @BeforeAll
     static void setup() throws IOException {
 
@@ -81,6 +85,9 @@ class SimulatorControllerTest {
         assertTrue(response);
     }
 
+    /**
+     * Ending properly the SUT
+     */
     @AfterAll
     public static void tearDown() {
 
