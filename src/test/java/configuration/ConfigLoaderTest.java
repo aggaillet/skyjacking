@@ -37,6 +37,7 @@ class ConfigLoaderTest {
         alreadyInit = true;
     }
 
+
     /**
      * --- Origin ---
      * ID: TC.01
@@ -49,7 +50,6 @@ class ConfigLoaderTest {
      *
      * ---
      */
-
     @Test
     void UT_01_A() throws IOException {
 
@@ -80,6 +80,28 @@ class ConfigLoaderTest {
         Assertions.assertEquals(realLat, configLoader.getLatitude());
         Assertions.assertEquals(realAlt, configLoader.getAltitude());
     }
+
+
+    /**
+     * --- Origin ---
+     * ID: TC.05
+     * Summary: "To verify the system's ability to provide the UAV's spoofed trajectory
+     *           to the user in a textual form using the interface IOutput."
+     *
+     * --- Description ---
+     * ID: UT-01-B
+     * Desc: todo
+     *
+     * ---
+     */
+    @Test
+    void UT_01_B(){
+
+
+    }
+
+
+
 
 
     /* ------

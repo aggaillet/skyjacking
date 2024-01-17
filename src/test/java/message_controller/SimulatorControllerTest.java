@@ -7,20 +7,11 @@ import com.sun.net.httpserver.HttpServer;
 import gpsutils.GpsPosition;
 
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
 
 import java.io.*;
 import java.net.InetSocketAddress;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.stream.Stream;
-
-import java.net.HttpURLConnection;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * Units Tests for SimulatorController class.
@@ -29,33 +20,24 @@ import static org.mockito.Mockito.when;
 class SimulatorControllerTest {
 
     //SUT objects declaration
-    SimulatorController simController1;
+    static SimulatorController simController1;
     static HttpServer server;
+    final static String context = "/mock-server";
     static int port = 8000;
 
     private final static double testLong = 43.5;
     private final static double testLat = 1.4;
     private final static double testAlt = 100;
 
+    @BeforeAll
+    static void setup() throws IOException {
 
-    /**
-     * SUT (system under test) initialization method.
-     * "BeforeEach" simulating a "BeforeALl"
-     * Reason: BeforeAll is a static method, so can't modify instance attributes inside it
-     */
-    private static boolean alreadyInit = false;
-    @BeforeEach
-    void setup() throws IOException {
-        if(alreadyInit) return;
-
-        simController1 = new SimulatorController("/");  //WHAT URL HAVE WE TO PUT HERE ?
+        simController1 = new SimulatorController(context, port);
 
         server = HttpServer.create(new InetSocketAddress(port), 0); //create http server
-        server.createContext("/", new MockHTTPServerHandler()); //assign our custom handler
+        server.createContext(context, new MockHTTPServerHandler()); //assign our custom handler
         server.setExecutor(null);
         server.start(); //start http server
-
-        alreadyInit = true;
     }
 
 
@@ -73,7 +55,7 @@ class SimulatorControllerTest {
     @Test
     void UT_02_A(){
 
-        GpsPosition gpsPosition = simController1.requestPosition();   //ERROR HERE, wrong URL ?
+        GpsPosition gpsPosition = simController1.requestPosition();
 
         assertEquals(testLong, gpsPosition.getLon());
         assertEquals(testLat, gpsPosition.getLat());
@@ -92,17 +74,19 @@ class SimulatorControllerTest {
      *
      * ---
      */
-    @Disabled
     @Test
     void UT_02_B(){
 
-//        boolean response = simController1.sendSpoofedMsg("test".getBytes());
+        boolean response = simController1.sendSpoofedMsg("test message".getBytes());
+        assertTrue(response);
     }
 
     @AfterAll
     public static void tearDown() {
-        server.stop(port);  //stop http server
+
+        server.stop(0);  //stop http server
     }
+
 
 //
 //
@@ -246,9 +230,8 @@ class SimulatorControllerTest {
         public void handle(HttpExchange exchange) throws IOException {
             String path = exchange.getRequestURI().getPath();
 
-            System.out.println("test HTTP server");
+            if (path.equals(context+"/requestPosition")) {
 
-            if (path.equals("/requestPosition")) {
                 String jsonResponse =
                         "{\"location\":{" +
                                 "\"longitude\":"+testLong+"," +
@@ -263,7 +246,9 @@ class SimulatorControllerTest {
                 OutputStream os = exchange.getResponseBody();
                 os.write(jsonResponse.getBytes());
                 os.close();
-            } else if (path.equals("/sendSpoofedMsg")) {
+
+            } else if (path.equals(context+"/sendSpoofedMsg")) {
+
                 if (exchange.getRequestMethod().equalsIgnoreCase("POST")) {
                     BufferedReader reader = new BufferedReader(new InputStreamReader(exchange.getRequestBody()));
                     StringBuilder requestBody = new StringBuilder();
@@ -280,6 +265,7 @@ class SimulatorControllerTest {
                     exchange.sendResponseHeaders(405, 0);
                 }
             } else {
+
                 exchange.sendResponseHeaders(404, 0);
             }
             exchange.getResponseBody().close();

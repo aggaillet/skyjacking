@@ -23,8 +23,8 @@ public class SimulatorController implements IMessageController {
      * Constructor of SimulatorController
      *
      */
-    public SimulatorController(String apiLink){
-        this.API_LINK = apiLink;
+    public SimulatorController(String apiContext, int port){
+        this.API_LINK = "http://localhost:"+Integer.toString(port)+apiContext;
     }
 
 
@@ -40,9 +40,8 @@ public class SimulatorController implements IMessageController {
         try {
 
             //The URL make the link between the order requested and the answer
-            URL apiURL = new URI(API_LINK+"/requestPosition").toURL();  // WHAT TO PUT HERE ??
+            URL apiURL = new URI(API_LINK+"/requestPosition").toURL();
 
-            System.err.println("test");
 
             HttpURLConnection connection = (HttpURLConnection) apiURL.openConnection();
 
@@ -70,7 +69,7 @@ public class SimulatorController implements IMessageController {
             reader.close();
             connection.disconnect();
 
-            return new GpsPosition(longitude, latitude, altitude, time);
+            return new GpsPosition(latitude, longitude, altitude, time);
         } catch (IOException | JSONException exception) {
             throw new RuntimeException("API handling error occurred", exception);
         } catch (URISyntaxException e) {
@@ -89,17 +88,17 @@ public class SimulatorController implements IMessageController {
     public boolean sendSpoofedMsg(byte[] byteMessage) {
         try {
             //The URL make the link between the API and the system
-            URL apiURL = new URL(API_LINK+"/sendSpoofedMsg");   // WHAT TO PUT HERE ??
+            URL apiURL = new URI(API_LINK+"/sendSpoofedMsg").toURL();
 
             HttpURLConnection connection = (HttpURLConnection) apiURL.openConnection();
-
-            if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                throw new IOException("Failed to get data : " + connection.getResponseCode());
-            }
 
             //Prepare the connection to send a message as a POST
             connection.setRequestMethod("POST");
             connection.setDoOutput(true);
+
+//            if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
+//                throw new IOException("Failed to get data : " + connection.getResponseCode());
+//            }
 
             OutputStream os = connection.getOutputStream();
             os.write(byteMessage);
@@ -110,7 +109,8 @@ public class SimulatorController implements IMessageController {
             connection.disconnect();
 
             return responseCode == HttpURLConnection.HTTP_OK;
-        } catch (IOException exception) {
+
+        } catch (IOException | URISyntaxException exception) {
             throw new RuntimeException(exception);
         }
     }
