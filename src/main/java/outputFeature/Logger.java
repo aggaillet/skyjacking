@@ -11,26 +11,26 @@ import java.util.List;
  * @version 1.0
  * @since 15/11/2023
  */
-public class Logger implements IOutput, AutoCloseable{
+public class Logger implements IOutput{
 
+    private final static String urlDirectory = "src/main/java/outputFeature/logs";
     private final HashMap<OutputData, BufferedWriter> writtersMap = new HashMap<>(); //map of buffers, key is the data type to be logged, value is the file writter
 
 
     /**
      * Constructor of Logger,
-     * @param pathToLogDirectory specified in config file, directory where will be created log files
      * @param dataToLog specified in config file, which data will be logged (init traj, spoofed trad, current position...)
      */
-    public Logger(String pathToLogDirectory, List<OutputData> dataToLog){
+    public Logger(List<OutputData> dataToLog){
 
         //fill all wanted output data in the map (Will allow to sort and avoid to log unwanted data), as well as their respective filewritters
-        if (dataToLog.size() > 0) {
+        if (!dataToLog.isEmpty()) {
             //for each Data the user want to log, create its own file in the specified directory
             for (OutputData outputData : dataToLog) {
-                String fullPath = pathToLogDirectory + "/" + outputData.toString().toLowerCase() + ".txt";
+                String eachPath = urlDirectory + "/" + outputData.toString().toLowerCase() + ".json";
                 try {
                     //creating files and buffer writers for each type of output data
-                    FileWriter currentFileWriter = new FileWriter(fullPath, false);
+                    FileWriter currentFileWriter = new FileWriter(eachPath, false);
                     this.writtersMap.put(outputData, new BufferedWriter(currentFileWriter));  //add them to the map of buffers
                 } catch (IOException e) {
                     System.err.println("Logger - IOException: Error creating [" + outputData + "] log file OR path given is not incorrect! \n");
@@ -87,18 +87,11 @@ public class Logger implements IOutput, AutoCloseable{
                 }
             }
     );
-}
-
-    /**
-     * ----- NOT WORKING /!\ -----
-     * Called when Garbage collector destroy the Logger object.
-     * Here, will simply close the log file writing stream
-     */
-    @Override
-    public void close() {
-        System.out.println("-- Logger destroyed --");
     }
 
+    public static String getDirectory() {
+        return urlDirectory;
+    }
 }
 
 // ----------------------

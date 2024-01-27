@@ -1,13 +1,18 @@
 package configuration;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import org.junit.jupiter.api.*;
+import outputFeature.Logger;
+import outputFeature.OutputData;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -20,8 +25,7 @@ class ConfigLoaderTest {
     private static final String urlConfigFile = "src/main/java/configuration/configuration.json";
     private static ConfigLoader configLoader;
 
-    private static final String urlLogFile = ""; //TODO:
-
+    private static Logger logger;
 
     /**
      * Setting up the SUT environment (before starting tests)
@@ -30,6 +34,10 @@ class ConfigLoaderTest {
     static void setup() {
 
         configLoader = new ConfigLoader();
+
+        List<OutputData> dataToLog = new ArrayList<OutputData>();
+        dataToLog.add(OutputData.SPOOFED_TRAJ);
+        logger = new Logger(dataToLog);
     }
 
 
@@ -93,12 +101,12 @@ class ConfigLoaderTest {
     @Test
     void UT_01_B() throws IOException {
 
-
         StringBuilder configText= new StringBuilder();
         String line ="";
 
-        //open buffer on the log file
-        BufferedReader bufferedReader = new BufferedReader(new FileReader(urlLogFile));
+        //initiate buffer on the dedicated log file for spoofed_traj -> test -> it should exists!!!
+        FileReader reader = new FileReader(Logger.getDirectory()+"/spoofed_traj.json"); //TODO: assert
+        BufferedReader bufferedReader = new BufferedReader(reader);
 
         //read it
         while (line!=null){
@@ -111,10 +119,11 @@ class ConfigLoaderTest {
         JSONObject jsonDestination = new JSONObject(configText.toString()).getJSONObject("UAV_position");   //TODO: define structure of log file
 
         //extract wanted inputs (lat, long, alt)
-        //TODO: choose the good data
-
-
+        // +
         //TODO: assertions
+        Assertions.assertDoesNotThrow(() -> jsonDestination.getDouble("latitude"));     //TODO: check if work
+        Assertions.assertDoesNotThrow(() -> jsonDestination.getDouble("longitude"));
+        Assertions.assertDoesNotThrow(() -> jsonDestination.getDouble("altitude"));
 
     }
 
