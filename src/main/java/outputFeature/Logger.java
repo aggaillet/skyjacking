@@ -13,7 +13,8 @@ import java.util.List;
  */
 public class Logger implements IOutput{
 
-    private final static String urlDirectory = "src/main/java/outputFeature/logs";
+//    private final static String urlDirectory = "src/main/java/outputFeature/logs";
+    private String urlToDirectory;
     private final HashMap<OutputData, BufferedWriter> writtersMap = new HashMap<>(); //map of buffers, key is the data type to be logged, value is the file writter
 
 
@@ -21,13 +22,13 @@ public class Logger implements IOutput{
      * Constructor of Logger,
      * @param dataToLog specified in config file, which data will be logged (init traj, spoofed trad, current position...)
      */
-    public Logger(List<OutputData> dataToLog){
-
+    public Logger(String utlToDirectory, List<OutputData> dataToLog){
+        this.urlToDirectory = utlToDirectory;
         //fill all wanted output data in the map (Will allow to sort and avoid to log unwanted data), as well as their respective filewritters
         if (!dataToLog.isEmpty()) {
             //for each Data the user want to log, create its own file in the specified directory
             for (OutputData outputData : dataToLog) {
-                String eachPath = urlDirectory + "/" + outputData.toString().toLowerCase() + ".json";
+                String eachPath = utlToDirectory + "/" + outputData.toString().toLowerCase() + ".json";
                 try {
                     //creating files and buffer writers for each type of output data
                     FileWriter currentFileWriter = new FileWriter(eachPath, false);
@@ -70,8 +71,6 @@ public class Logger implements IOutput{
             System.err.println("Logger - IOException: Error while trying to write last data into log file! (File: " + data + ") \n");
             return;
         }
-
-        System.out.println("-- END OF WRITE -- \n");
     }
 
     /**
@@ -89,8 +88,8 @@ public class Logger implements IOutput{
     );
     }
 
-    public static String getDirectory() {
-        return urlDirectory;
+    public String getDirectory() {
+        return this.urlToDirectory;
     }
 }
 

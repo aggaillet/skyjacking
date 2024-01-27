@@ -37,7 +37,7 @@ class ConfigLoaderTest {
 
         List<OutputData> dataToLog = new ArrayList<OutputData>();
         dataToLog.add(OutputData.SPOOFED_TRAJ);
-        logger = new Logger(dataToLog);
+        logger = new Logger("src/main/java/outputFeature/logs", dataToLog);
     }
 
 
@@ -97,15 +97,21 @@ class ConfigLoaderTest {
      *
      * ---
      */
-    @Disabled
     @Test
     void UT_01_B() throws IOException {
+
+        //Log a random spoofed trajectory
+        logger.write(OutputData.SPOOFED_TRAJ, "Lat: 15; Long: 38; ALt: 140; Time: 80802424;");
+
+        //terminate the logger, to close files and apply changes
+        logger.terminateLogger();
+
 
         StringBuilder configText= new StringBuilder();
         String line ="";
 
-        //initiate buffer on the dedicated log file for spoofed_traj -> test -> it should exists!!!
-        FileReader reader = new FileReader(Logger.getDirectory()+"/spoofed_traj.json"); //TODO: assert
+        //initiate buffer on the dedicated log file for spoofed_traj
+        FileReader reader = new FileReader(logger.getDirectory()+"/spoofed_traj.json"); //TODO: assert that the file exists proof that Logger hqs successfully created it
         BufferedReader bufferedReader = new BufferedReader(reader);
 
         //read it
@@ -115,16 +121,10 @@ class ConfigLoaderTest {
         }
         bufferedReader.close();
 
-        //transform wanted content into JSON
-        JSONObject jsonDestination = new JSONObject(configText.toString()).getJSONObject("UAV_position");   //TODO: define structure of log file
 
-        //extract wanted inputs (lat, long, alt)
-        // +
-        //TODO: assertions
-        Assertions.assertDoesNotThrow(() -> jsonDestination.getDouble("latitude"));     //TODO: check if work
-        Assertions.assertDoesNotThrow(() -> jsonDestination.getDouble("longitude"));
-        Assertions.assertDoesNotThrow(() -> jsonDestination.getDouble("altitude"));
 
+        //check that data has been log successfully (to precise: format of the log file)
+        Assertions.assertTrue((configText.indexOf("SPOOFED_TRAJ") != -1), "not found");
     }
 
 

@@ -1,7 +1,7 @@
 {
   "MessageAlgorithmType": "TIMESTAMP",
   "PositionAlgorithmType": "which one to use",
-  "Directory": "where",
+  "Directory": "src/main/java/outputFeature/logs",
   "destination":{
     "altitude": -1,
     "longitude": -1,
